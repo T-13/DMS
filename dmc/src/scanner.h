@@ -3,7 +3,7 @@
 #include <istream>
 #include <string>
 
-#include "Token.h"
+#include "token.h"
 
 class Scanner {
 public:
@@ -42,6 +42,7 @@ protected:
 
 private:
     // State transition description
+    // TODO DMS
     const static int MaxState = 8; // Amount of states
     const static int StartState = 0; // Initial state
     const static int NoEdge = -1; // No state transition
@@ -61,6 +62,8 @@ private:
                 automata[i][j] = NoEdge;
             }
         }
+
+        // TODO DMS
 
         /* Float */
         // In state 0, 1 or 2, next is digit, go to state 1

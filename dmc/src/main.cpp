@@ -1,11 +1,11 @@
 #include <iostream>
 #include <fstream>
 
-#include "Parser.h"
+#include "parser.h"
 
 void usage() {
-    std::cout << "./parser <input>" << std::endl << std::endl;
-    std::cout << "Syntax analysis of input file (expanded)." << std::endl;
+    std::cout << "./dmc <input>" << std::endl << std::endl;
+    std::cout << "Compile input file." << std::endl;
     std::cout << "<input>" << std::endl;
     std::cout << "    File path (string)." << std::endl;
 }
