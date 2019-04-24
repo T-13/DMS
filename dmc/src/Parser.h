@@ -46,13 +46,13 @@ protected:
     // CONSTANT ::= #identifier E | #identifier E CONSTANT
     //
     // PLAYERS ::= "PLAYERS:" PLAYER
-    // PLAYER ::= #identifier STAT | #identifier STAT PLAYER
+    // PLAYER ::= #identifier STATS | #identifier STATS PLAYER
     //
     // ENEMIES ::= "ENEMIES:" ENEMY
-    // ENEMY ::= #identifier STAT | #identifier STAT ENEMY
+    // ENEMY ::= #identifier STATS | #identifier STATS ENEMY
     //
-    // STAT ::= "has" E ATTRIBUTE
-    // ATTRIBUTE ::= "hp" | "dmg" | "hit_chance" | ...
+    // STATS ::= STAT | STAT STATS
+    // STAT ::= "has" E #string
     //
     // ENCOUNTERS ::= "ENCOUNTERS:" HAPPENINGS
     // SCENARIOS ::= "SCENARIOS:" HAPPENINGS
@@ -88,57 +88,150 @@ protected:
 
             if (token.type() == Token::Identifier) {
                 return CONSTANT();
+            } else {
+                return Ok;
             }
         }
         return Error;
     }
 
     bool PLAYERS() {
-
+        if (token.lexem() == "PLAYERS:") {
+            token = scanner.next_token();
+            return PLAYER();
+        }
+        return Error;
     }
 
     bool PLAYER() {
+        if (token.type() == Token::Identifier) {
+            token = scanner.next_token();
+            if(!STATS()) return Error;
 
+            if (token.type() == Token::Identifier) {
+                return PLAYER();
+            } else {
+                return Ok;
+            }
+        }
+        return Error;
     }
 
     bool ENEMIES() {
-
+        if (token.lexem() == "ENEMIES:") {
+            token = scanner.next_token();
+            return ENEMY();
+        }
+        return Error;
     }
 
     bool ENEMY() {
+        if (token.type() == Token::Identifier) {
+            token = scanner.next_token();
+            if(!STATS()) return Error;
 
+            if (token.type() == Token::Identifier) {
+                return ENEMY();
+            } else {
+                return Ok;
+            }
+        }
+        return Error;
+    }
+
+    bool STATS() {
+        if(!STAT()) return Error;
+        if(token.lexem() == "has") {
+            return STATS();
+        }
+        return Ok;
     }
 
     bool STAT() {
+        if(token.lexem() == "has") {
+            token = scanner.next_token();
+            if(!E()) return Error;
 
-    }
-
-    bool ATTRIBUTE() {
-
+            if(token.type() == Token::Identifier) {
+                token = scanner.next_token();
+                return Ok;
+            }
+        }
+        return Error;
     }
 
     bool ENCOUNTERS() {
-
+        if (token.lexem() == "ENCOUNTERS:") {
+            token = scanner.next_token();
+            return HAPPENINGS();
+        }
+        return Error;
     }
 
     bool SCENARIOS() {
-
+        if (token.lexem() == "SCENARIOS:") {
+            token = scanner.next_token();
+            return HAPPENINGS();
+        }
+        return Error;
     }
 
     bool HAPPENINGS() {
+        if (token.type() == Token::Identifier) {
+            token = scanner.next_token();
+            if(token.lexem() == "has") {
+                token = scanner.next_token();
+                if(!THING()) return Error;
 
+                if(token.type() == Token::Identifier) {
+                    return HAPPENINGS();
+                } else {
+                    return Ok;
+                }
+            }
+        }
+        return Error;
     }
 
     bool THING() {
+        if (token.type() == Token::Identifier) {
+            token = scanner.next_token();
+            if(!OCCURRENCES()) return Error;
 
+            if(token.lexem() == "+") {
+                token = scanner.next_token();
+                return THING();
+            } else {
+                return Ok;
+            }
+        }
+
+        return Error;
     }
 
     bool OCCURRENCES() {
+        if(token.lexem() == "*") {
+            token = scanner.next_token();
 
+            if(token.type() == Token::Float) {
+                token = scanner.next_token();
+                return Ok;
+            } else {
+                return Error;
+            }
+        }
+        return Ok;
     }
 
     bool START() {
-
+        if (token.lexem() == "START") {
+            token = scanner.next_token();
+            if(token.type() == Token::Identifier) {
+                token = scanner.next_token();
+                return Ok;
+            }
+        }
+        return Error;
     }
 
     bool E() {
