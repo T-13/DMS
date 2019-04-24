@@ -3,6 +3,12 @@ project(dmc)
 
 set(CMAKE_CXX_STANDARD 14)
 
+if(MSVC)
+    add_compile_options(/W4)
+else()
+    add_compile_options(-Wall -Wextra -pedantic)
+endif()
+
 file(GLOB DMC_SRC
     "src/*.h"
     "src/*.cpp"
