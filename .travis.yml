@@ -3,31 +3,27 @@ branches:
     - master
     - ci # CI testing
 
-language: cpp
 
-cache:
-  apt: true
+language: generic  # Avoid system resetting CC/CXX before install
 
+dist: xenial
 addons:
   apt:
     sources:
       - ubuntu-toolchain-r-test
     packages:
-      - g++-8
-  env: COMPILER=gcc-8 COMPILERXX=g++-8
+      - g++-8 # Install newer libstdc++ also required by clang
 
 matrix:
   include:
-    - compiler: gcc
-      env: COMPILER=gcc-8 COMPILERXX=g++-8
+    - compiler: gcc-8
+      env: CC=gcc-8 CXX=g++-8
 
-install:
-  # Overwrite compiler variables
-  - if [[ "${COMPILER}" != "" ]]; then
-      export CC=${COMPILER};
-      export CXX=${COMPILERXX};
-    fi
+    - compiler: clang
+      env: CC=clang CXX=clang++
 
 script:
+  # DMC
   - cd dmc && mkdir build && cd build && cmake .. && make -j3
+  # DME
   #- cd dme && mkdir build && cd build && cmake .. && make -j3
