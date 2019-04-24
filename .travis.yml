@@ -8,4 +8,5 @@ compiler:
   - gcc
 
 script:
-- mkdir build && cd build && cmake .. && make -j3
+- cd dmc && mkdir build && cd build && cmake .. && make -j3
+#- cd dme && mkdir build && cd build && cmake .. && make -j3
