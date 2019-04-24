@@ -18,7 +18,7 @@ public:
         if (!token.eof()) {
             if (token.error()) {
                 std::cout << "lex error: " << token << std::endl;
-                return Ok;
+                return Error;
             } else {
                 result = Error;
             }
@@ -34,7 +34,7 @@ public:
     }
 
     bool error() {
-        return result;
+        return result == Error;
     }
 
 protected:
