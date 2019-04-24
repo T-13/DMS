@@ -87,7 +87,7 @@ private:
         for (int i = 'A'; i <= 'Z'; i++) {
             automata[0][i] = automata[6][i] = 6;
         }
-        // In state 6, next is digit or - or _ or :, go to state 6
+        // In state 6, next is digit, '-', '_' or ':', go to state 6
         for (int i = '0'; i <= '9'; i++) {
             automata[6][i] = 6;
         }

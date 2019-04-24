@@ -42,8 +42,8 @@ public:
     DmsField<T> operator%(const DmsField<T>& value);
 
     // TODO - Choose serialize or compile or both and choose type str/byte[]...
-    std::string serialize(){ return ""; };
-    std::string compile(){ return ""; };
+    std::string serialize() { return ""; };
+    std::string compile() { return ""; };
 
 protected:
     DmsObject *parent;

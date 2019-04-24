@@ -106,7 +106,7 @@ protected:
     bool PLAYER() {
         if (token.type() == Token::Identifier) {
             token = scanner.next_token();
-            if(!STATS()) return Error;
+            if (!STATS()) return Error;
 
             if (token.type() == Token::Identifier) {
                 return PLAYER();
@@ -128,7 +128,7 @@ protected:
     bool ENEMY() {
         if (token.type() == Token::Identifier) {
             token = scanner.next_token();
-            if(!STATS()) return Error;
+            if (!STATS()) return Error;
 
             if (token.type() == Token::Identifier) {
                 return ENEMY();
@@ -140,19 +140,19 @@ protected:
     }
 
     bool STATS() {
-        if(!STAT()) return Error;
-        if(token.lexem() == "has") {
+        if (!STAT()) return Error;
+        if (token.lexem() == "has") {
             return STATS();
         }
         return Ok;
     }
 
     bool STAT() {
-        if(token.lexem() == "has") {
+        if (token.lexem() == "has") {
             token = scanner.next_token();
-            if(!E()) return Error;
+            if (!E()) return Error;
 
-            if(token.type() == Token::Identifier) {
+            if (token.type() == Token::Identifier) {
                 token = scanner.next_token();
                 return Ok;
             }
@@ -179,11 +179,11 @@ protected:
     bool HAPPENINGS() {
         if (token.type() == Token::Identifier) {
             token = scanner.next_token();
-            if(token.lexem() == "has") {
+            if (token.lexem() == "has") {
                 token = scanner.next_token();
-                if(!THING()) return Error;
+                if (!THING()) return Error;
 
-                if(token.type() == Token::Identifier) {
+                if (token.type() == Token::Identifier) {
                     return HAPPENINGS();
                 } else {
                     return Ok;
@@ -196,9 +196,9 @@ protected:
     bool THING() {
         if (token.type() == Token::Identifier) {
             token = scanner.next_token();
-            if(!OCCURRENCES()) return Error;
+            if (!OCCURRENCES()) return Error;
 
-            if(token.lexem() == "+") {
+            if (token.lexem() == "+") {
                 token = scanner.next_token();
                 return THING();
             } else {
@@ -210,10 +210,10 @@ protected:
     }
 
     bool OCCURRENCES() {
-        if(token.lexem() == "*") {
+        if (token.lexem() == "*") {
             token = scanner.next_token();
 
-            if(token.type() == Token::Float) {
+            if (token.type() == Token::Float) {
                 token = scanner.next_token();
                 return Ok;
             } else {
@@ -226,7 +226,7 @@ protected:
     bool START() {
         if (token.lexem() == "START") {
             token = scanner.next_token();
-            if(token.type() == Token::Identifier) {
+            if (token.type() == Token::Identifier) {
                 token = scanner.next_token();
                 return Ok;
             }
