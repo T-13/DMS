@@ -2,10 +2,10 @@
 
 #include <map>
 
-#include "DmsField.h"
-#include "DmsIntField.h"
-#include "DmsFloatField.h"
-#include "DmsStringField.h"
+#include "DmsFields/DmsField.h"
+#include "DmsFields/DmsIntField.h"
+#include "DmsFields/DmsFloatField.h"
+#include "DmsFields/DmsStringField.h"
 
 class DmsObject;
 

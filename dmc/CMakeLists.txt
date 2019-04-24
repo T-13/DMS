@@ -9,7 +9,7 @@ else()
     add_compile_options(-Wall -Wextra -pedantic)
 endif()
 
-file(GLOB DMC_SRC
+file(GLOB_RECURSE DMC_SRC
     "src/*.h"
     "src/*.cpp"
 )

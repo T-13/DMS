@@ -6,7 +6,6 @@ DmsIntField::DmsIntField() {
 DmsIntField::~DmsIntField() {
 }
 
-
 DmsIntField::DmsIntField(const DmsIntField &field)
         : DmsField(field.name, field.parent), value(field.value) {
 }
