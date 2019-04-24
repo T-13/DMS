@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
+#include "DmsField.h"
 
 /**
  *
@@ -12,22 +13,20 @@
  *	Value is the value of the field
  *	
  **/
-class DmsObject;
 
-class DmsField
+class DmsStringField: public DmsField
 {
-protected:
-	DmsObject *parent;
-	std::string name;
+	std::string value;
 public:
-	DmsField();
-	DmsField(std::string newName, DmsObject* newParent);
-	virtual ~DmsField() {};
+	DmsStringField();
+	DmsStringField(const DmsStringField & other);
+	DmsStringField(std::string newName, std::string newValue, DmsObject* newParent);
+	~DmsStringField();
 
-	std::string getName() const;
+	void setValue(std::string newValue);
+	std::string getValue();
 
-	// TODO - Choose serialize or compile or both and choose type str/byte[]...
-	virtual std::string serialize() = 0;
-	virtual std::string compile() = 0;
+	std::string serialize() { return ""; };
+	std::string compile() { return ""; };
 };
 

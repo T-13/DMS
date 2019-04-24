@@ -1,6 +1,9 @@
 #pragma once
 #include <map>
 #include "DmsField.h"
+#include "DmsIntField.h"
+#include "DmsFloatField.h"
+#include "DmsStringField.h"
 
 class DmsObject;
 
@@ -9,9 +12,10 @@ class DmsFieldScope
 private:
 	DmsObject* parent;
 
-	std::map<std::string, DmsField<int>> int_fields;
-	std::map<std::string, DmsField<float>> float_fields;
-	std::map<std::string, DmsField<std::string>> string_fields;
+	std::map<std::string, DmsIntField> int_fields;
+	std::map<std::string, DmsFloatField> float_fields;
+	std::map<std::string, DmsStringField> string_fields;
+	
 
 public:
 	DmsFieldScope();
@@ -23,6 +27,7 @@ public:
 	void setFieldValue(std::string name, float value);
 	void setFieldValue(std::string name, std::string value);
 
+
 	void getFieldValue(std::string name, int* value);
 	void getFieldValue(std::string name, float* value);
 	void getFieldValue(std::string name, std::string* value);
@@ -32,5 +37,6 @@ public:
 	// TODO - Choose serialize or compile or both and choose type str/byte[]...
 	std::string serialize();
 	std::string compile();
+
 };
 
