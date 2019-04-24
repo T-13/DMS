@@ -1,12 +1,33 @@
 branches:
   only:
-  - master
+    - master
+    - ci # CI testing
 
 language: cpp
-compiler:
-  - clang
-  - gcc
+
+cache:
+  apt: true
+
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - g++-8
+  env: COMPILER=gcc-8 COMPILERXX=g++-8
+
+matrix:
+  include:
+    - compiler: gcc
+      env: COMPILER=gcc-8 COMPILERXX=g++-8
+
+install:
+  # Overwrite compiler variables
+  - if [[ "${COMPILER}" != "" ]]; then
+      export CC=${COMPILER};
+      export CXX=${COMPILERXX};
+    fi
 
 script:
-- cd dmc && mkdir build && cd build && cmake .. && make -j3
-#- cd dme && mkdir build && cd build && cmake .. && make -j3
+  - cd dmc && mkdir build && cd build && cmake .. && make -j3
+  #- cd dme && mkdir build && cd build && cmake .. && make -j3
