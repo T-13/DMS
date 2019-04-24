@@ -1,16 +1,17 @@
 #pragma once
+
 #include "DmsFieldScope.h"
 
-class DmsObject
-{
-protected:
-	DmsFieldScope field_scope;
+class DmsObject {
 public:
-	DmsObject();
-	~DmsObject();
+    DmsObject();
+    ~DmsObject();
 
-	// TODO - Choose serialize or compile or both and choose type str/byte[]...
-	std::string serialize() { return field_scope.serialize(); };
-	std::string compile() { return field_scope.compile(); };
+    // TODO - Choose serialize or compile or both and choose type str/byte[]...
+    std::string serialize() { return field_scope.serialize(); };
+    std::string compile() { return field_scope.compile(); };
+
+protected:
+    DmsFieldScope field_scope;
 };
 
