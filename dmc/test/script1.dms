@@ -13,7 +13,7 @@ encounter1 has enemy1 * 5 + enemy2 * 2
 encounter2 has enemy2 * 10
 
 SCENARIOS:
-scenario1 has encounter1 + encounter 2 + encounter 1
+scenario1 has encounter1 + encounter2 + encounter1
 scenario2 has encounter2 * 5
 scenario3 has scenario2 + scenario1
 
