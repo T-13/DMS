@@ -52,7 +52,7 @@ protected:
     // ENEMY ::= #identifier STATS | #identifier STATS ENEMY
     //
     // STATS ::= STAT | STAT STATS
-    // STAT ::= "has" E #string
+    // STAT ::= "has" E #identifier
     //
     // ENCOUNTERS ::= "ENCOUNTERS:" HAPPENINGS
     // SCENARIOS ::= "SCENARIOS:" HAPPENINGS
