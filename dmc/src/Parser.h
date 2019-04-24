@@ -12,13 +12,13 @@ public:
 
     bool parse() {
         token = scanner.next_token();
-        result = S(); // Call top grammar procedure
+        result = DUNGEON(); // Call top grammar procedure
 
         // Lexical error or premature EOF (syntax error)
         if (!token.eof()) {
             if (token.error()) {
                 std::cout << "lex error: " << token << std::endl;
-                return Ok;
+                return Error;
             } else {
                 result = Error;
             }
@@ -34,62 +34,111 @@ public:
     }
 
     bool error() {
-        return result;
+        return result == Error;
     }
 
 protected:
     // BNF Grammar
-    // TODO DMS
     //
-    // S   ::= for I to E S C | #Keyword E C | I C | epsilon    // Statement
-    // I   ::= #Identifier := E | #Identifier | epsilon         // Identifier (Assignment)
-    // C   ::= ; S                                              // Chain (statements)
+    // DUNGEON ::= CONSTANTS PLAYERS ENEMIES ENCOUNTERS SCENARIOS START
     //
-    // E   ::= T EE                                             // Expression
-    // EE  ::= + T EE | - T EE | epsilon                        // Sub-Expression
-    // T   ::= F TT                                             // Term
-    // TT  ::= * F TT | / F TT | ^ F TT | % F TT | epsilon      // Sub-Term
-    // F   ::= ( E ) | #Float | #Identifier                     // Prioritized Expression
+    // CONSTANTS ::= "CONSTANTS:" CONSTANT | ε
+    // CONSTANT ::= #identifier E | #identifier E CONSTANT
+    //
+    // PLAYERS ::= "PLAYERS:" PLAYER
+    // PLAYER ::= #identifier STAT | #identifier STAT PLAYER
+    //
+    // ENEMIES ::= "ENEMIES:" ENEMY
+    // ENEMY ::= #identifier STAT | #identifier STAT ENEMY
+    //
+    // STAT ::= "has" E ATTRIBUTE
+    // ATTRIBUTE ::= "hp" | "dmg" | "hit_chance" | ...
+    //
+    // ENCOUNTERS ::= "ENCOUNTERS:" HAPPENINGS
+    // SCENARIOS ::= "SCENARIOS:" HAPPENINGS
+    //
+    // HAPPENINGS ::= #identifier "has" THING | #identifier "has" THING HAPPENINGS
+    // THING ::= #identifier OCCURRENCES | #identifier OCCURRENCES + THING
+    // OCCURRENCES ::= * #int | ε
+    //
+    // START ::= "START" #identifier
+    //
+    // E ::= T EE                                       // Expression
+    // EE::= + T EE | - T EE | ε                        // Sub-Expression
+    // T ::= F TT                                       // Term
+    // TT::= * F TT | / F TT | ^ F TT | % F TT | ε      // Sub-Term
+    // F ::= ( E ) | #float | #variable                 // Prioritized Expression
 
-    bool S() {
-        if (token.lexem() == "for") {
-            token = scanner.next_token();
-            if (!I()) return Error;
-
-            if (token.lexem() == "to") {
-                token = scanner.next_token();
-                return E() && S() && C();
-            }
-
-            return Error;
-        } else if (token.type() == Token::Keyword && token.lexem() != "to") {
-            token = scanner.next_token();
-            return E() && C();
-        } else {
-            return I() && C();
-        }
+    bool DUNGEON() {
+        return CONSTANTS() && PLAYERS() && ENEMIES() && ENCOUNTERS() && SCENARIOS() && START();
     }
 
-    bool I() {
+    bool CONSTANTS() {
+        if (token.lexem() == "CONSTANTS:") {
+            token = scanner.next_token();
+            return CONSTANT();
+        }
+        return Ok;
+    }
+
+    bool CONSTANT() {
         if (token.type() == Token::Identifier) {
             token = scanner.next_token();
+            if (!E()) return Error;
 
-            if (token.lexem() == ":=") {
-                token = scanner.next_token();
-                return E();
+            if (token.type() == Token::Identifier) {
+                return CONSTANT();
             }
         }
-
-        return Ok;
+        return Error;
     }
 
-    bool C() {
-        if (token.lexem() == ";") {
-            token = scanner.next_token();
-            return S();
-        }
+    bool PLAYERS() {
 
-        return Ok;
+    }
+
+    bool PLAYER() {
+
+    }
+
+    bool ENEMIES() {
+
+    }
+
+    bool ENEMY() {
+
+    }
+
+    bool STAT() {
+
+    }
+
+    bool ATTRIBUTE() {
+
+    }
+
+    bool ENCOUNTERS() {
+
+    }
+
+    bool SCENARIOS() {
+
+    }
+
+    bool HAPPENINGS() {
+
+    }
+
+    bool THING() {
+
+    }
+
+    bool OCCURRENCES() {
+
+    }
+
+    bool START() {
+
     }
 
     bool E() {
