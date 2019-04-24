@@ -42,8 +42,7 @@ protected:
 
 private:
     // State transition description
-    // TODO DMS
-    const static int MaxState = 8; // Amount of states
+    const static int MaxState = 7; // Amount of states
     const static int StartState = 0; // Initial state
     const static int NoEdge = -1; // No state transition
 
@@ -63,8 +62,6 @@ private:
             }
         }
 
-        // TODO DMS
-
         /* Float */
         // In state 0, 1 or 2, next is digit, go to state 1
         for (int i = '0'; i <= '9'; i++) {
@@ -77,10 +74,6 @@ private:
         // In state 0, next is '+', '*', '-', '/', '^' or '%', go to state 3
         automata[0]['+'] = automata[0]['*'] = automata[0]['-'] =
         automata[0]['/'] = automata[0]['^'] = automata[0]['%'] = 3;
-        // In state 0, next is ':', go to state 7
-        automata[0][':'] = 7;
-        // In state 7, next is '=', go to state 8
-        automata[7]['='] = 8;
 
         /* Separator */
         // In state 0, next is '(', ')' or ';', go to state 4
@@ -94,10 +87,11 @@ private:
         for (int i = 'A'; i <= 'Z'; i++) {
             automata[0][i] = automata[6][i] = 6;
         }
-        // In state 6, next is digit, go to state 6
+        // In state 6, next is digit or - or _ or :, go to state 6
         for (int i = '0'; i <= '9'; i++) {
             automata[6][i] = 6;
         }
+        automata[6]['-'] = automata[6]['_'] = automata[6][':'] = 6;
 
         /* Ignore */
         // In state 0 or 5, next is white-space, go to state 5
@@ -122,8 +116,6 @@ private:
         finite[6] = Token::Identifier;
         // State 7 not finite, returns lexical error
         finite[7] = Token::LexError;
-        // State 8 finite, returns lexical symbol operator
-        finite[8] = Token::Operator;
     }
 
     // Peeks to next character in input

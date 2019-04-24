@@ -8,7 +8,6 @@
 class Token {
 public:
     enum Type {
-        // TODO DMS
         LexError = -1,
         Ignore = 0,
         Float = 1,
@@ -77,7 +76,6 @@ private:
 
 // Definitions (header-only)
 const std::unordered_map<Token::Type, std::string> Token::TypeNames = {
-    // TODO DMS
     { Float,      "float"      },
     { Operator,   "operator"   },
     { Separator,  "separator"  },
@@ -86,5 +84,5 @@ const std::unordered_map<Token::Type, std::string> Token::TypeNames = {
 };
 
 const std::unordered_set<std::string> Token::Keywords = {
-    "for", "to", "CONSOLE" // TODO DMS
+    "CONSTANTS:", "PLAYERS:", "ENEMIES:", "ENCOUNTERS:", "SCENARIOS:", "START", "has"
 };
