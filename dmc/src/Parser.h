@@ -2,7 +2,7 @@
 
 #include <istream>
 
-#include "scanner.h"
+#include "Scanner.h"
 
 class Parser {
 public:

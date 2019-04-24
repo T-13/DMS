@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
 
-#include "parser.h"
+#include "Parser.h"
 
 void usage() {
     std::cout << "./dmc <input>" << std::endl << std::endl;
