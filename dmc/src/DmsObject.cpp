@@ -1,7 +1,7 @@
 #include "DmsObject.h"
 
 DmsObject::DmsObject() {
-    field_scope.addParent(this);
+    field_scope.add_parent(this);
 }
 
 

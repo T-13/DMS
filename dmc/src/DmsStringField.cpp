@@ -1,33 +1,23 @@
 #include "DmsStringField.h"
 
-
-DmsStringField::DmsStringField()
-{
-
+DmsStringField::DmsStringField() {
 }
 
-DmsStringField::~DmsStringField()
-{
-
+DmsStringField::~DmsStringField() {
 }
 
-
-DmsStringField::DmsStringField(const DmsStringField & other)
-{
-	this->name = other.name;
-	this->value = other.value;
-	this->parent = other.parent;
+DmsStringField::DmsStringField(const DmsStringField &field)
+        : DmsField(field.name, field.parent), value(field.value) {
 }
 
-DmsStringField::DmsStringField(std::string newName, std::string newValue, DmsObject* newParent): DmsField(newName, newParent)
-{
-	this->value = newValue;
+DmsStringField::DmsStringField(std::string name_, std::string value_, DmsObject *parent_)
+        : DmsField(name_, parent_), value(value_) {
 }
 
-void DmsStringField::setValue(std::string newValue) {
-	this->value = newValue;
+void DmsStringField::set_value(std::string value_) {
+    value = value_;
 }
 
-std::string DmsStringField::getValue() {
-	return this->value;
+std::string DmsStringField::get_value() {
+    return value;
 }

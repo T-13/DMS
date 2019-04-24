@@ -1,33 +1,24 @@
 #include "DmsIntField.h"
 
-
-DmsIntField::DmsIntField()
-{
-
+DmsIntField::DmsIntField() {
 }
 
-DmsIntField::~DmsIntField()
-{
-
+DmsIntField::~DmsIntField() {
 }
 
 
-DmsIntField::DmsIntField(const DmsIntField & other)
-{
-	this->name = other.name;
-	this->value = other.value;
-	this->parent = other.parent;
+DmsIntField::DmsIntField(const DmsIntField &field)
+        : DmsField(field.name, field.parent), value(field.value) {
 }
 
-DmsIntField::DmsIntField(std::string newName, int newValue, DmsObject* newParent): DmsField(newName, newParent)
-{
-	this->value = newValue;
+DmsIntField::DmsIntField(std::string name_, int value_, DmsObject *parent_)
+        : DmsField(name_, parent_), value(value_) {
 }
 
-void DmsIntField::setValue(int newValue) {
-	this->value = newValue;
+void DmsIntField::set_value(int value_) {
+    value = value_;
 }
 
-int DmsIntField::getValue() {
-	return this->value;
+int DmsIntField::get_value() {
+    return value;
 }

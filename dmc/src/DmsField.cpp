@@ -6,11 +6,10 @@ DmsField::DmsField() {
 DmsField::~DmsField() {
 }
 
-DmsField::DmsField(std::string newName, DmsObject* newParent) {
-    this->name = newName;
-    this->parent = newParent;
+DmsField::DmsField(std::string name_, DmsObject *parent_)
+        : parent(parent_), name(name_) {
 }
 
-std::string DmsField::getName() const {
+std::string DmsField::get_name() const {
     return name;
 }

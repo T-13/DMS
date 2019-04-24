@@ -1,31 +1,23 @@
 #include "DmsFloatField.h"
 
-
-DmsFloatField::DmsFloatField()
-{
-
+DmsFloatField::DmsFloatField() {
 }
 
-DmsFloatField::~DmsFloatField(){
-
+DmsFloatField::~DmsFloatField() {
 }
 
-DmsFloatField::DmsFloatField(const DmsFloatField & other)
-{
-	this->name = other.name;
-	this->value = other.value;
-	this->parent = other.parent;
+DmsFloatField::DmsFloatField(const DmsFloatField &field)
+        : DmsField(field.name, field.parent), value(field.value) {
 }
 
-DmsFloatField::DmsFloatField(std::string newName, float newValue, DmsObject* newParent): DmsField(newName, newParent)
-{
-	this->value = newValue;
+DmsFloatField::DmsFloatField(std::string name_, float value_, DmsObject *parent_)
+        : DmsField(name_, parent_), value(value_) {
 }
 
-void DmsFloatField::setValue(float newValue) {
-	this->value = newValue;
+void DmsFloatField::set_value(float value_) {
+    value = value_;
 }
 
-float DmsFloatField::getValue() {
-	return this->value;
+float DmsFloatField::get_value() {
+    return value;
 }

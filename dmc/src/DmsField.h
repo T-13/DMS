@@ -18,10 +18,10 @@ class DmsObject;
 class DmsField {
 public:
     DmsField();
-    DmsField(std::string newName, DmsObject* newParent);
+    DmsField(std::string name_, DmsObject *parent_);
     virtual ~DmsField();
 
-    std::string getName() const;
+    std::string get_name() const;
 
     // TODO - Choose serialize or compile or both and choose type str/byte[]...
     virtual std::string serialize() = 0;

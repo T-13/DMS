@@ -1,32 +1,35 @@
 #pragma once
+
 #include <string>
 #include <vector>
+
 #include "DmsField.h"
 
 /**
  *
- *	DmsField is used to store atributes of DmsObjects
- *	Standardised and objectified field makes compilation/serialization easier
- *	
- *	Parent points to the parent object of this field - In case of global variable it is a GlobalVariableHolder
- *	Name is the name of the variable/property
- *	Value is the value of the field
- *	
+ *  DmsField is used to store atributes of DmsObjects
+ *  Standardised and objectified field makes compilation/serialization easier
+ *
+ *  Parent points to the parent object of this field - In case of global variable it is a GlobalVariableHolder
+ *  Name is the name of the variable/property
+ *  Value is the value of the field
+ *
  **/
 
-class DmsIntField: public DmsField
-{
-	int value;
+class DmsIntField: public DmsField {
 public:
-	DmsIntField();
-	DmsIntField(const DmsIntField & other);
-	DmsIntField(std::string newName, int newValue, DmsObject* newParent);
-	~DmsIntField();
+    DmsIntField();
+    DmsIntField(const DmsIntField &field);
+    DmsIntField(std::string name_, int value_, DmsObject *parent_);
+    ~DmsIntField();
 
-	void setValue(int newValue);
-	int getValue();
+    void set_value(int value_);
+    int get_value();
 
-	std::string serialize() { return ""; };
-	std::string compile() { return ""; };
+    std::string serialize() { return ""; };
+    std::string compile() { return ""; };
+
+private:
+    int value;
 };
 
