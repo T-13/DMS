@@ -15,39 +15,20 @@
  **/
 class DmsObject;
 
-template<typename T>
 class DmsField {
 public:
     DmsField();
-    DmsField(std::string newName, T newValue, DmsObject* newParent);
-    DmsField(const DmsField& field);
-    ~DmsField();
+    DmsField(std::string newName, DmsObject* newParent);
+    virtual ~DmsField();
 
-    T getValue();
-    void setValue(T newValue);
     std::string getName() const;
 
-    DmsField<T> operator=(const T& value);
-    DmsField<T> operator+(const T& value);
-    DmsField<T> operator-(const T& value);
-    DmsField<T> operator/(const T& value);
-    DmsField<T> operator*(const T& value);
-    DmsField<T> operator%(const T& value);
-
-    DmsField<T> operator=(const DmsField<T>& value);
-    DmsField<T> operator+(const DmsField<T>& value);
-    DmsField<T> operator-(const DmsField<T>& value);
-    DmsField<T> operator/(const DmsField<T>& value);
-    DmsField<T> operator*(const DmsField<T>& value);
-    DmsField<T> operator%(const DmsField<T>& value);
-
     // TODO - Choose serialize or compile or both and choose type str/byte[]...
-    std::string serialize() { return ""; };
-    std::string compile() { return ""; };
+    virtual std::string serialize() = 0;
+    virtual std::string compile() = 0;
 
 protected:
     DmsObject *parent;
     std::string name;
-    T value;
 };
 
