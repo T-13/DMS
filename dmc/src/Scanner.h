@@ -68,16 +68,16 @@ private:
             automata[0][i] = automata[1][i] = automata[2][i] = 1;
         }
         // In state 1, next is dot, go to state 2
-        automata[1]['.'] = 2;
+        automata[1][(uint8_t)'.'] = 2;
 
         /* Operator */
         // In state 0, next is '+', '*', '-', '/', '^' or '%', go to state 3
-        automata[0]['+'] = automata[0]['*'] = automata[0]['-'] =
-        automata[0]['/'] = automata[0]['^'] = automata[0]['%'] = 3;
+        automata[0][(uint8_t)'+'] = automata[0][(uint8_t)'*'] = automata[0][(uint8_t)'-'] =
+        automata[0][(uint8_t)'/'] = automata[0][(uint8_t)'^'] = automata[0][(uint8_t)'%'] = 3;
 
         /* Separator */
         // In state 0, next is '(', ')' or ';', go to state 4
-        automata[0]['('] = automata[0][')'] = automata[0][';'] = 4;
+        automata[0][(uint8_t)'('] = automata[0][(uint8_t)')'] = automata[0][(uint8_t)';'] = 4;
 
         /* Identifier */
         // In state 0 or 6, next is alphanumeric, go to state 6
@@ -91,14 +91,14 @@ private:
         for (int i = '0'; i <= '9'; i++) {
             automata[6][i] = 6;
         }
-        automata[6]['-'] = automata[6]['_'] = automata[6][':'] = 6;
+        automata[6][(uint8_t)'-'] = automata[6][(uint8_t)'_'] = automata[6][(uint8_t)':'] = 6;
 
         /* Ignore */
         // In state 0 or 5, next is white-space, go to state 5
-        automata[0]['\n'] = automata[5]['\n'] =
-        automata[0][' ']  = automata[5][' ']  =
-        automata[0]['\t'] = automata[5]['\t'] =
-        automata[0]['\r'] = automata[5]['\r'] = 5;
+        automata[0][(uint8_t)'\n'] = automata[5][(uint8_t)'\n'] =
+        automata[0][(uint8_t)' ']  = automata[5][(uint8_t)' ']  =
+        automata[0][(uint8_t)'\t'] = automata[5][(uint8_t)'\t'] =
+        automata[0][(uint8_t)'\r'] = automata[5][(uint8_t)'\r'] = 5;
 
         // State 0 not finite, returns lexical error
         finite[0] = Token::LexError;
