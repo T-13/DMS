@@ -1,0 +1,20 @@
+CONSTANTS:
+playerHP 100+2
+
+PLAYERS:
+player1 has playerHP*2 hp has 20 dmg has 80 hit_chance
+
+ENEMIES:
+enemy1 has 40 hp has 50 dmg has 90 hit_chance
+enemy2 has 1 hp has 1000 dmg has 1 hit_chance
+
+ENCOUNTERS:
+encounter1 has enemy1 * 5 + enemy2 * 2
+encounter2 has enemy2 * 10
+
+SCENARIOS:
+scenario1 has encounter1 + encounter 2 + encounter 1
+scenario2 has encounter2 * 5
+scenario3 has scenario2 + scenario1
+
+START scenario3
