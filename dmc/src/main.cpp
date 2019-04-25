@@ -39,6 +39,8 @@ int main(int argc, char *argv[]) {
     bool res = parser.parse();
     std::cout << (res ? "Successful!" : "Failed!") << std::endl;
 
+    std::cout << parser.game->serialize() << std::endl;
+
     // Cleanup
     in_f.close();
 

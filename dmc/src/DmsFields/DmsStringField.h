@@ -26,7 +26,7 @@ public:
     void set_value(std::string value_);
     std::string get_value();
 
-    std::string serialize() { return ""; };
+    std::string serialize() { return name + " -> " + value + "\n"; };
     std::string compile() { return ""; };
 
 private:

@@ -3,6 +3,7 @@
 #include <istream>
 
 #include "Scanner.h"
+#include "DmsGame.h"
 
 class Parser {
 public:
@@ -36,6 +37,8 @@ public:
     bool error() {
         return result == Error;
     }
+
+    DmsGame *game = new DmsGame();
 
 protected:
     // BNF Grammar
@@ -83,8 +86,14 @@ protected:
 
     bool CONSTANT() {
         if (token.type() == Token::Identifier) {
+
+            std::string lexem = token.lexem();
+            string_E = "";
+
             token = scanner.next_token();
             if (!E()) return Error;
+
+            game->constants->field_scope.set_field_value(lexem, string_E);
 
             if (token.type() == Token::Identifier) {
                 return CONSTANT();
@@ -97,6 +106,8 @@ protected:
 
     bool PLAYERS() {
         if (token.lexem() == "PLAYERS:") {
+            current = game->players;
+
             token = scanner.next_token();
             return PLAYER();
         }
@@ -105,6 +116,8 @@ protected:
 
     bool PLAYER() {
         if (token.type() == Token::Identifier) {
+            string_OBJECT = token.lexem() + "_";
+
             token = scanner.next_token();
             if (!STATS()) return Error;
 
@@ -119,6 +132,8 @@ protected:
 
     bool ENEMIES() {
         if (token.lexem() == "ENEMIES:") {
+            current = game->enemies;
+
             token = scanner.next_token();
             return ENEMY();
         }
@@ -127,6 +142,8 @@ protected:
 
     bool ENEMY() {
         if (token.type() == Token::Identifier) {
+            string_OBJECT = token.lexem() + "_";
+
             token = scanner.next_token();
             if (!STATS()) return Error;
 
@@ -150,9 +167,15 @@ protected:
     bool STAT() {
         if (token.lexem() == "has") {
             token = scanner.next_token();
+
+            string_E = "";
+
             if (!E()) return Error;
 
             if (token.type() == Token::Identifier) {
+
+                current->field_scope.set_field_value(string_OBJECT + token.lexem(), string_E);
+
                 token = scanner.next_token();
                 return Ok;
             }
@@ -162,6 +185,8 @@ protected:
 
     bool ENCOUNTERS() {
         if (token.lexem() == "ENCOUNTERS:") {
+            current = game->encounters;
+
             token = scanner.next_token();
             return HAPPENINGS();
         }
@@ -170,6 +195,8 @@ protected:
 
     bool SCENARIOS() {
         if (token.lexem() == "SCENARIOS:") {
+            current = game->scenarios;
+
             token = scanner.next_token();
             return HAPPENINGS();
         }
@@ -178,10 +205,16 @@ protected:
 
     bool HAPPENINGS() {
         if (token.type() == Token::Identifier) {
+
+            std::string lexem = token.lexem();
             token = scanner.next_token();
             if (token.lexem() == "has") {
                 token = scanner.next_token();
+
+                string_THING = "";
                 if (!THING()) return Error;
+
+                current->field_scope.set_field_value(lexem, string_THING);
 
                 if (token.type() == Token::Identifier) {
                     return HAPPENINGS();
@@ -195,10 +228,14 @@ protected:
 
     bool THING() {
         if (token.type() == Token::Identifier) {
+            string_THING += token.lexem();
+
             token = scanner.next_token();
             if (!OCCURRENCES()) return Error;
 
             if (token.lexem() == "+") {
+                string_THING += token.lexem();
+
                 token = scanner.next_token();
                 return THING();
             } else {
@@ -211,9 +248,13 @@ protected:
 
     bool OCCURRENCES() {
         if (token.lexem() == "*") {
+            string_THING += token.lexem();
+
             token = scanner.next_token();
 
             if (token.type() == Token::Float) {
+                string_THING += token.lexem();
+
                 token = scanner.next_token();
                 return Ok;
             } else {
@@ -240,6 +281,9 @@ protected:
 
     bool EE() {
         if (token.lexem() == "+" || token.lexem() == "-") {
+
+            string_E += token.lexem();
+
             token = scanner.next_token();
             return T() && EE();
         }
@@ -252,6 +296,9 @@ protected:
 
     bool TT() {
         if (token.lexem() == "*" || token.lexem() == "/" || token.lexem() == "^" || token.lexem() == "%") {
+
+            string_E += token.lexem();
+
             token = scanner.next_token();
             return F() && TT();
         }
@@ -260,16 +307,25 @@ protected:
 
     bool F() {
         if (token.lexem() == "(") {
+
+            string_E += token.lexem();
+
             token = scanner.next_token();
             if (!E()) return Error;
 
             if (token.lexem() == ")") {
+
+                string_E += token.lexem();
+
                 token = scanner.next_token();
                 return Ok;
             } else {
                 return Error;
             }
         } else if (token.type() == Token::Float || token.type() == Token::Identifier) {
+
+            string_E += token.lexem();
+
             token = scanner.next_token();
             return Ok;
         }
@@ -285,4 +341,10 @@ private:
     Scanner scanner;
     Token token;
     bool result;
+
+    std::string string_E = "";
+    std::string string_STAT = "";
+    std::string string_OBJECT = "";
+    std::string string_THING = "";
+    DmsObject *current;
 };

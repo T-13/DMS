@@ -26,7 +26,7 @@ public:
     void set_value(float value_);
     float get_value();
 
-    std::string serialize() { return ""; };
+    std::string serialize() { return name + " -> " + std::to_string(value) + "\n"; };
     std::string compile() { return ""; };
 
 private:
