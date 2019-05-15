@@ -13,13 +13,11 @@
  *  Value is the value of the field
  *
  **/
-class DmsObject;
-
 template<class T>
 class DmsField {
 public:
     DmsField();
-    DmsField(std::string name_, T value_, DmsObject *parent_);
+    DmsField(std::string name_, T value_);
     ~DmsField();
 
     T get_value() const;
@@ -31,7 +29,6 @@ public:
     std::string compile();
 
 protected:
-    DmsObject *parent;
     std::string name;
     T value;
 };
@@ -41,8 +38,8 @@ DmsField<T>::DmsField() {
 }
 
 template<class T>
-DmsField<T>::DmsField(std::string name_, T value_, DmsObject *parent_)
-        : parent(parent_), name(name_), value(value_) {
+DmsField<T>::DmsField(std::string name_, T value_)
+        : name(name_), value(value_) {
 }
 
 template<class T>
