@@ -12,37 +12,37 @@ void DmsFieldScope::add_parent(DmsObject *parent_) {
 }
 
 void DmsFieldScope::set_field_value(std::string name, int value) {
-    std::map<std::string, DmsIntField>::iterator it = int_fields.find(name);
+    std::map<std::string, DmsField<int>>::iterator it = int_fields.find(name);
 
     if (it != int_fields.end()) {
         it->second.set_value(value);
     } else {
-        int_fields[name] = DmsIntField(name, value, parent);
+        int_fields[name] = DmsField<int>(name, value, parent);
     }
 }
 
 void DmsFieldScope::set_field_value(std::string name, float value) {
-    std::map<std::string, DmsFloatField>::iterator it = float_fields.find(name);
+    std::map<std::string, DmsField<float>>::iterator it = float_fields.find(name);
 
     if (it != float_fields.end()) {
         it->second.set_value(value);
     } else {
-        float_fields[name] = DmsFloatField(name, value, parent);
+        float_fields[name] = DmsField<float>(name, value, parent);
     }
 }
 
 void DmsFieldScope::set_field_value(std::string name, std::string value) {
-    std::map<std::string,DmsStringField>::iterator it = string_fields.find(name);
+    std::map<std::string,DmsField<std::string>>::iterator it = string_fields.find(name);
 
     if (it != string_fields.end()) {
         it->second.set_value(value);
     } else {
-        string_fields[name] = DmsStringField(name, value, parent);
+        string_fields[name] = DmsField<std::string>(name, value, parent);
     }
 }
 
 void DmsFieldScope::get_field_value(std::string name, int *value) {
-    std::map<std::string, DmsIntField>::iterator it = int_fields.find(name);
+    std::map<std::string, DmsField<int>>::iterator it = int_fields.find(name);
 
     if (it != int_fields.end()) {
         *value = it->second.get_value();
@@ -50,7 +50,7 @@ void DmsFieldScope::get_field_value(std::string name, int *value) {
 }
 
 void DmsFieldScope::get_field_value(std::string name, float *value) {
-    std::map<std::string, DmsFloatField>::iterator it = float_fields.find(name);
+    std::map<std::string, DmsField<float>>::iterator it = float_fields.find(name);
 
     if (it != float_fields.end()) {
         *value = it->second.get_value();
@@ -58,7 +58,7 @@ void DmsFieldScope::get_field_value(std::string name, float *value) {
 }
 
 void DmsFieldScope::get_field_value(std::string name, std::string *value) {
-    std::map<std::string, DmsStringField>::iterator it = string_fields.find(name);
+    std::map<std::string, DmsField<std::string>>::iterator it = string_fields.find(name);
 
     if (it != string_fields.end()) {
         *value = it->second.get_value();

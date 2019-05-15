@@ -2,10 +2,7 @@
 
 #include <map>
 
-#include "DmsFields/DmsField.h"
-#include "DmsFields/DmsIntField.h"
-#include "DmsFields/DmsFloatField.h"
-#include "DmsFields/DmsStringField.h"
+#include "DmsField.h"
 
 class DmsObject;
 
@@ -33,7 +30,7 @@ public:
  private:
     DmsObject* parent;
 
-    std::map<std::string, DmsIntField> int_fields;
-    std::map<std::string, DmsFloatField> float_fields;
-    std::map<std::string, DmsStringField> string_fields;
+    std::map<std::string, DmsField<int>> int_fields;
+    std::map<std::string, DmsField<float>> float_fields;
+    std::map<std::string, DmsField<std::string>> string_fields;
 };
