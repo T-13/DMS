@@ -41,30 +41,6 @@ void DmsFieldScope::set_field_value(std::string name, std::string value) {
     }
 }
 
-void DmsFieldScope::get_field_value(std::string name, int *value) {
-    std::map<std::string, DmsField<int>>::iterator it = int_fields.find(name);
-
-    if (it != int_fields.end()) {
-        *value = it->second.get_value();
-    }
-}
-
-void DmsFieldScope::get_field_value(std::string name, float *value) {
-    std::map<std::string, DmsField<float>>::iterator it = float_fields.find(name);
-
-    if (it != float_fields.end()) {
-        *value = it->second.get_value();
-    }
-}
-
-void DmsFieldScope::get_field_value(std::string name, std::string *value) {
-    std::map<std::string, DmsField<std::string>>::iterator it = string_fields.find(name);
-
-    if (it != string_fields.end()) {
-        *value = it->second.get_value();
-    }
-}
-
 std::vector<std::string> DmsFieldScope::get_all_field_names() {
     std::vector<std::string> result;
 
