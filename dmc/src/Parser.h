@@ -4,6 +4,7 @@
 
 #include "Scanner.h"
 #include "DmsGame.h"
+#include "DmsObjects/DmsPlayer.h"
 
 class Parser {
 public:
@@ -91,9 +92,17 @@ protected:
             string_E = "";
 
             token = scanner.next_token();
-            if (!E()) return Error;
+            if(token.type() == Token::String) {
+                game->constants->field_scope.set_field_value(lexem, token.lexem(), true);
+                token = scanner.next_token();
+                if (token.type() == Token::Identifier) {
+                    return CONSTANT();
+                } else {
+                    return Ok;
+                }
+            } else if (!E()) return Error;
 
-            game->constants->field_scope.set_field_value(lexem, string_E);
+            game->constants->field_scope.set_field_value(lexem, string_E, false);
 
             if (token.type() == Token::Identifier) {
                 return CONSTANT();
@@ -116,7 +125,7 @@ protected:
 
     bool PLAYER() {
         if (token.type() == Token::Identifier) {
-            string_OBJECT = token.lexem() + "_";
+            string_OBJECT = token.lexem();
 
             DmsObject *playersScope = current;
             current = new DmsPlayer();
@@ -124,7 +133,7 @@ protected:
             token = scanner.next_token();
             if (!STATS()) return Error;
 
-            playersScope->field_scope.set_field_value(string_OBJECT, current);
+            playersScope->field_scope.set_field_value(string_OBJECT, current, true);
             current = playersScope;
 
             if (token.type() == Token::Identifier) {
@@ -148,10 +157,16 @@ protected:
 
     bool ENEMY() {
         if (token.type() == Token::Identifier) {
-            string_OBJECT = token.lexem() + "_";
+            string_OBJECT = token.lexem();
+
+            DmsObject *enemyScope = current;
+            current = new DmsPlayer();
 
             token = scanner.next_token();
             if (!STATS()) return Error;
+
+            enemyScope->field_scope.set_field_value(string_OBJECT, current, true);
+            current = enemyScope;
 
             if (token.type() == Token::Identifier) {
                 return ENEMY();
@@ -175,12 +190,17 @@ protected:
             token = scanner.next_token();
 
             string_E = "";
+            bool resolved = false;
 
-            if (!E()) return Error;
+            if (token.type() == Token::String) {
+                string_E = token.lexem();
+                token = scanner.next_token();
+                resolved = true;
+            } else if (!E()) return Error;
 
             if (token.type() == Token::Identifier) {
 
-                current->field_scope.set_field_value(token.lexem(), string_E);
+                current->field_scope.set_field_value(token.lexem(), string_E, resolved);
 
                 token = scanner.next_token();
                 return Ok;
@@ -220,7 +240,7 @@ protected:
                 string_THING = "";
                 if (!THING()) return Error;
 
-                current->field_scope.set_field_value(lexem, string_THING);
+                current->field_scope.set_field_value(lexem, string_THING, false);
 
                 if (token.type() == Token::Identifier) {
                     return HAPPENINGS();

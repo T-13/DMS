@@ -2,6 +2,7 @@
 
 #include <string>
 #include <vector>
+#include "DmsSerializable.h"
 
 /**
  *
@@ -21,7 +22,8 @@ public:
     ~DmsField();
 
     T get_value() const;
-    void set_value(T value_);
+    bool get_is_resolved() const;
+    void set_value(T value_, bool is_resolved_);
     std::string get_name() const;
 
     // TODO - Choose serialize or compile or both and choose type str/byte[]...
@@ -31,6 +33,7 @@ public:
 protected:
     std::string name;
     T value;
+    bool is_resolved;
 };
 
 template<class T>
@@ -51,9 +54,15 @@ T DmsField<T>::get_value() const {
     return value;
 }
 
+template<class T>
+bool DmsField<T>::get_is_resolved() const {
+    return is_resolved;
+}
+
 template <class T>
-void DmsField<T>::set_value(T newValue) {
+void DmsField<T>::set_value(T newValue, bool is_resolved_) {
     value = newValue;
+    is_resolved = is_resolved_;
 }
 
 template<class T>
