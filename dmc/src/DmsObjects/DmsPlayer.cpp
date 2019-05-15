@@ -1,6 +1,13 @@
 #include "DmsPlayer.h"
 
 bool DmsPlayer::verify() {
-    //return !(dmg < 0 || hit_chance < 0 || hp < 0);
-    return true; // TODO verify field_scope
+    bool found_dmg;
+    bool found_hit_chance;
+    bool found_hp;
+
+    field_scope.get_field_value<float>("dmg", &found_dmg);
+    field_scope.get_field_value<float>("hit_chance", &found_hit_chance);
+    field_scope.get_field_value<float>("hp", &found_hp);
+
+    return found_dmg && found_hit_chance && found_hp;
 }
