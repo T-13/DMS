@@ -1,10 +1,6 @@
 #pragma once
 
-#include "DmsObjects/DmsConstant.h"
-#include "DmsObjects/DmsPlayer.h"
-#include "DmsObjects/DmsEnemy.h"
-#include "DmsObjects/DmsEncounter.h"
-#include "DmsObjects/DmsScenario.h"
+#include "DmsObject.h"
 
 class DmsGame {
 public:
@@ -15,9 +11,9 @@ public:
     std::string serialize();
     std::string compile();
 
-    DmsConstant *constants;
-    DmsPlayer *players;
-    DmsEnemy *enemies;
-    DmsEncounter *encounters;
-    DmsScenario *scenarios;
+    DmsObject *constants;
+    DmsObject *players;
+    DmsObject *enemies;
+    DmsObject *encounters;
+    DmsObject *scenarios;
 };

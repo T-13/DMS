@@ -1,5 +1,9 @@
 #include "DmsEncounter.h"
 
+DmsEncounter::DmsEncounter(DmsFieldScope *enclosing_scope)
+        : DmsObject(enclosing_scope) {
+}
+
 bool DmsEncounter::verify() {
     std::vector<std::string> fields = field_scope.get_all_field_names();
 

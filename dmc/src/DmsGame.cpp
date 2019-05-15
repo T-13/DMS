@@ -1,13 +1,12 @@
 #include "DmsGame.h"
 
 DmsGame::DmsGame() {
-    constants = new DmsConstant();
-    players = new DmsPlayer();
-    enemies = new DmsEnemy();
-    encounters = new DmsEncounter();
-    scenarios = new DmsScenario();
+    constants = new DmsObject();
+    players = new DmsObject();
+    enemies = new DmsObject();
+    encounters = new DmsObject();
+    scenarios = new DmsObject();
 }
-
 
 DmsGame::~DmsGame() {
     delete constants;
@@ -18,7 +17,7 @@ DmsGame::~DmsGame() {
 }
 
 std::string DmsGame::serialize() {
-    return "\nCONSTANTS: \n" + constants->serialize() +
+    return  "\nCONSTANTS: \n" + constants->serialize() +
             "\nPLAYERS: \n" + players->serialize() +
             "\nENEMIES: \n" + enemies->serialize() +
             "\nENCOUNTERS: \n" + encounters->serialize() +

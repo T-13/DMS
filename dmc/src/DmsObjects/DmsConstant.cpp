@@ -1,5 +1,9 @@
 #include "DmsConstant.h"
 
+DmsConstant::DmsConstant(DmsFieldScope *enclosing_scope)
+        : DmsObject(enclosing_scope) {
+}
+
 bool DmsConstant::verify() {
     std::vector<std::string> fields = field_scope.get_all_field_names();
 
