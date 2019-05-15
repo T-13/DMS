@@ -1,6 +1,6 @@
 #include "DmsEnemy.h"
 
-bool DmsPlayer::verify() {
+bool DmsEnemy::verify() {
     bool found_dmg;
     bool found_hit_chance;
     bool found_hp;

@@ -1,5 +1,5 @@
-#include "DmsContant.h"
+#include "DmsConstant.h"
 
-bool DmsContant::verify() {
+bool DmsConstant::verify() {
     return true; // TODO verify field_scope
 }
