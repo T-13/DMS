@@ -4,8 +4,9 @@
 
 class DmsPlayer: public DmsObject {
 public:
-    DmsPlayer(): DmsObject(){};
-    DmsPlayer(DmsFieldScope *enclosing_scope): DmsObject(enclosing_scope){};
+    DmsPlayer();
+    DmsPlayer(DmsFieldScope *enclosing_scope);
+
     bool verify();
 };
 

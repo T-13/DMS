@@ -1,5 +1,12 @@
 #include "DmsPlayer.h"
 
+DmsPlayer::DmsPlayer() {
+}
+
+DmsPlayer::DmsPlayer(DmsFieldScope *enclosing_scope)
+        : DmsObject(enclosing_scope) {
+}
+
 bool DmsPlayer::verify() {
     bool found_dmg;
     bool found_hit_chance;

@@ -4,6 +4,9 @@
 
 class DmsEncounter: public DmsObject {
 public:
+    DmsEncounter();
+    DmsEncounter(DmsFieldScope *enclosing_scope);
+
     bool verify();
 };
 

@@ -1,5 +1,12 @@
 #include "DmsEnemy.h"
 
+DmsEnemy::DmsEnemy() {
+}
+
+DmsEnemy::DmsEnemy(DmsFieldScope *enclosing_scope)
+        : DmsObject(enclosing_scope) {
+}
+
 bool DmsEnemy::verify() {
     bool found_dmg;
     bool found_hit_chance;
