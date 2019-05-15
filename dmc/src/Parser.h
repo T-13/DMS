@@ -92,15 +92,18 @@ protected:
             string_E = "";
 
             token = scanner.next_token();
-            if(token.type() == Token::String) {
+            if (token.type() == Token::String) {
                 game->constants->field_scope.set_field_value(lexem, token.lexem(), true);
                 token = scanner.next_token();
+
                 if (token.type() == Token::Identifier) {
                     return CONSTANT();
                 } else {
                     return Ok;
                 }
-            } else if (!E()) return Error;
+            } else {
+                if (!E()) return Error;
+            }
 
             game->constants->field_scope.set_field_value(lexem, string_E, false);
 
@@ -196,10 +199,11 @@ protected:
                 string_E = token.lexem();
                 token = scanner.next_token();
                 resolved = true;
-            } else if (!E()) return Error;
+            } else {
+                if (!E()) return Error;
+            }
 
             if (token.type() == Token::Identifier) {
-
                 current->field_scope.set_field_value(token.lexem(), string_E, resolved);
 
                 token = scanner.next_token();

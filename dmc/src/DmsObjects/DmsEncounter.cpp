@@ -15,7 +15,7 @@ bool DmsEncounter::verify() {
     std::vector<int> int_fields = field_scope.get_all_field_values<int>();
     std::vector<float> float_fields = field_scope.get_all_field_values<float>();
     std::vector<std::string> string_fields = field_scope.get_all_field_values<std::string>();
-    std::vector<DmsObject*> object_fields = field_scope.get_all_field_values<DmsObject*>();
+    std::vector<DmsSerializable*> object_fields = field_scope.get_all_field_values<DmsSerializable*>();
 
     // Contains any unwanted field
     if (!int_fields.empty() || !float_fields.empty() || !string_fields.empty()) {
@@ -23,7 +23,7 @@ bool DmsEncounter::verify() {
     }
 
     for (const auto &field : object_fields) {
-        if (typeid(field) != typeid(DmsEnemy) || typeid(field) != typeid(DmsPlayer)) {
+        if (typeid(field) != typeid(DmsEnemy) /*|| typeid(field) != typeid(DmsPlayer)*/) {
             return false;
         }
     }

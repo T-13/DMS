@@ -75,7 +75,7 @@ inline std::string DmsFieldScope::get_field_value(std::string name, bool *found)
 template<>
 inline DmsSerializable* DmsFieldScope::get_field_value(std::string name, bool *found) {
     std::map<std::string, DmsField<DmsSerializable*>>::iterator it = object_fields.find(name);
-    
+
     if (it != object_fields.end()) {
         *found = true;
         return it->second.get_value();
@@ -118,8 +118,8 @@ inline std::vector<std::string> DmsFieldScope::get_all_field_values() {
 }
 
 template<>
-inline std::vector<DmsObject*> DmsFieldScope::get_all_field_values() {
-    std::vector<DmsObject*> values;
+inline std::vector<DmsSerializable*> DmsFieldScope::get_all_field_values() {
+    std::vector<DmsSerializable*> values;
 
     for (auto &field : object_fields) {
         values.push_back(field.second.get_value());

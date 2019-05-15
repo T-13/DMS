@@ -63,6 +63,9 @@ std::vector<std::string> DmsFieldScope::get_all_field_names() {
     for (const auto &field : string_fields) {
         result.push_back(field.first);
     }
+    for (const auto &field : object_fields) {
+        result.push_back(field.first);
+    }
 
     return result;
 }
