@@ -9,6 +9,7 @@ DmsGame::DmsGame() {
 }
 
 DmsGame::~DmsGame() {
+    // TODO Delete recursively
     delete constants;
     delete players;
     delete enemies;
