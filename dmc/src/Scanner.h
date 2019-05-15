@@ -42,7 +42,7 @@ protected:
 
 private:
     // State transition description
-    const static int MaxState = 7; // Amount of states
+    const static int MaxState = 9; // Amount of states
     const static int StartState = 0; // Initial state
     const static int NoEdge = -1; // No state transition
 
@@ -60,6 +60,10 @@ private:
             for (int j = 0; j < 256; j++) {
                 automata[i][j] = NoEdge;
             }
+        }
+
+        for (int j = 0; j < 256; j++) {
+            automata[9][j] = 9;
         }
 
         /* Float */
@@ -100,6 +104,10 @@ private:
         automata[0][(uint8_t)'\t'] = automata[5][(uint8_t)'\t'] =
         automata[0][(uint8_t)'\r'] = automata[5][(uint8_t)'\r'] = 5;
 
+        /* String */
+        automata[0][(uint8_t)'"'] = 9;
+        automata[9][(uint8_t)'"'] = 8;
+
         // State 0 not finite, returns lexical error
         finite[0] = Token::LexError;
         // State 1 finite, returns lexical symbol float
@@ -116,6 +124,10 @@ private:
         finite[6] = Token::Identifier;
         // State 7 not finite, returns lexical error
         finite[7] = Token::LexError;
+        // State 8 finite, returns lexical symbol string
+        finite[8] = Token::String;
+        // State 9 not finite, returns lexical error
+        finite[9] = Token::LexError;
     }
 
     // Peeks to next character in input

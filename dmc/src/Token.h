@@ -14,7 +14,8 @@ public:
         Operator = 2,
         Separator = 3,
         Identifier = 4,
-        Keyword = 5
+        Keyword = 5,
+        String = 6
     };
     static const std::unordered_map<Type, std::string> TypeNames;
     static const std::unordered_set<std::string> Keywords;
@@ -80,7 +81,8 @@ const std::unordered_map<Token::Type, std::string> Token::TypeNames = {
     { Operator,   "operator"   },
     { Separator,  "separator"  },
     { Identifier, "identifier" },
-    { Keyword,    "keyword"    }
+    { Keyword,    "keyword"    },
+    { String,     "string"     }
 };
 
 const std::unordered_set<std::string> Token::Keywords = {
