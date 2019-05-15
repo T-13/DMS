@@ -11,6 +11,10 @@ void DmsFieldScope::set_enclosing_scope(DmsFieldScope *enclosing_scope_) {
     enclosing_scope = enclosing_scope_;
 }
 
+DmsFieldScope *DmsFieldScope::get_enclosing_scope() const {
+    return enclosing_scope;
+}
+
 void DmsFieldScope::set_field_value(std::string name, int value, bool is_resolved) {
     std::map<std::string, DmsField<int>>::iterator it = int_fields.find(name);
 

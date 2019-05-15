@@ -3,6 +3,9 @@
 DmsObject::DmsObject() {
 }
 
+DmsObject::DmsObject(const DmsObject &/*object*/) {
+}
+
 DmsObject::DmsObject(DmsFieldScope* enclosing_scope) {
     field_scope.set_enclosing_scope(enclosing_scope);
 }

@@ -13,6 +13,7 @@ public:
     ~DmsFieldScope();
 
     void set_enclosing_scope(DmsFieldScope *enclosing_scope);
+    DmsFieldScope *get_enclosing_scope() const;
 
     void set_field_value(std::string name, int value, bool is_resolved);
     void set_field_value(std::string name, float value, bool is_resolved);

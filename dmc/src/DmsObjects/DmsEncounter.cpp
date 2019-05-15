@@ -7,6 +7,10 @@
 DmsEncounter::DmsEncounter() {
 }
 
+DmsEncounter::DmsEncounter(const DmsEncounter &encounter)
+        : DmsObject(encounter.field_scope.get_enclosing_scope()) {
+}
+
 DmsEncounter::DmsEncounter(DmsFieldScope *enclosing_scope)
         : DmsObject(enclosing_scope) {
 }

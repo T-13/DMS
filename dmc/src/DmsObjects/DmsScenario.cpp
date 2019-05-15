@@ -6,6 +6,10 @@
 DmsScenario::DmsScenario() {
 }
 
+DmsScenario::DmsScenario(const DmsScenario &scenario)
+        : DmsObject(scenario.field_scope.get_enclosing_scope()) {
+}
+
 DmsScenario::DmsScenario(DmsFieldScope *enclosing_scope)
         : DmsObject(enclosing_scope) {
 }
