@@ -1,12 +1,10 @@
 #pragma once
 
-#include "../DmsObject.h"
+#include "DmsCharacter.h"
 
-class DmsPlayer: public DmsObject {
+class DmsPlayer: public DmsCharacter {
 public:
     DmsPlayer();
     DmsPlayer(DmsFieldScope *enclosing_scope);
-
-    bool verify();
 };
 
