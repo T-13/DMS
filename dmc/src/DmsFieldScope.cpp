@@ -41,6 +41,16 @@ void DmsFieldScope::set_field_value(std::string name, std::string value) {
     }
 }
 
+void DmsFieldScope::set_field_value(std::string name, DmsObject* value) {
+    std::map<std::string, DmsField<DmsObject*>>::iterator it = object_fields.find(name);
+
+    if (it != object_fields.end()) {
+        it->second.set_value(value);
+    } else {
+        object_fields[name] = DmsField<DmsObject*>(name, value);
+    }
+}
+
 std::vector<std::string> DmsFieldScope::get_all_field_names() {
     std::vector<std::string> result;
 

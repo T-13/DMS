@@ -16,6 +16,7 @@ public:
     void set_field_value(std::string name, int value);
     void set_field_value(std::string name, float value);
     void set_field_value(std::string name, std::string value);
+    void set_field_value(std::string name, DmsObject* object);
 
     template<typename T>
     T get_field_value(std::string name, bool *found);
