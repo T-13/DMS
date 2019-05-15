@@ -19,9 +19,11 @@ public:
     void set_field_value(std::string name, DmsObject* object);
 
     template<typename T>
-    T get_field_value(std::string name, bool *found);
+    T get_field_value(std::string name, bool *found); // Use with eg. get_field_value<int>
 
     std::vector<std::string> get_all_field_names();
+    template<typename T>
+    std::vector<T> get_all_field_values(); // Use with eg. get_all_field_values<int>()
 
     // TODO - Choose serialize or compile or both and choose type str/byte[]...
     std::string serialize();
@@ -78,4 +80,48 @@ inline DmsObject* DmsFieldScope::get_field_value(std::string name, bool *found) 
     }
     *found = false;
     return nullptr;
+}
+
+template<>
+inline std::vector<int> DmsFieldScope::get_all_field_values() {
+    std::vector<int> values;
+
+    for (auto &field : int_fields) {
+        values.push_back(field.second.get_value());
+    }
+
+    return values;
+}
+
+template<>
+inline std::vector<float> DmsFieldScope::get_all_field_values() {
+    std::vector<float> values;
+
+    for (auto &field : float_fields) {
+        values.push_back(field.second.get_value());
+    }
+
+    return values;
+}
+
+template<>
+inline std::vector<std::string> DmsFieldScope::get_all_field_values() {
+    std::vector<std::string> values;
+
+    for (auto &field : string_fields) {
+        values.push_back(field.second.get_value());
+    }
+
+    return values;
+}
+
+template<>
+inline std::vector<DmsObject*> DmsFieldScope::get_all_field_values() {
+    std::vector<DmsObject*> values;
+
+    for (auto &field : object_fields) {
+        values.push_back(field.second.get_value());
+    }
+
+    return values;
 }

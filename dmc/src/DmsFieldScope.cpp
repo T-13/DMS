@@ -54,14 +54,14 @@ void DmsFieldScope::set_field_value(std::string name, DmsObject* value) {
 std::vector<std::string> DmsFieldScope::get_all_field_names() {
     std::vector<std::string> result;
 
-    for (const auto a : int_fields) {
-        result.push_back(a.first);
+    for (const auto &field : int_fields) {
+        result.push_back(field.first);
     }
-    for (const auto a : float_fields) {
-        result.push_back(a.first);
+    for (const auto &field : float_fields) {
+        result.push_back(field.first);
     }
-    for (const auto a : string_fields) {
-        result.push_back(a.first);
+    for (const auto &field : string_fields) {
+        result.push_back(field.first);
     }
 
     return result;
@@ -70,14 +70,14 @@ std::vector<std::string> DmsFieldScope::get_all_field_names() {
 std::string DmsFieldScope::serialize() {
     std::string result = "";
 
-    for (auto a : int_fields) {
-        result += a.second.serialize();
+    for (auto &field : int_fields) {
+        result += field.second.serialize();
     }
-    for (auto a : float_fields) {
-        result += a.second.serialize();
+    for (auto &field : float_fields) {
+        result += field.second.serialize();
     }
-    for (auto a : string_fields) {
-        result += a.second.serialize();
+    for (auto &field : string_fields) {
+        result += field.second.serialize();
     }
 
     return result;
@@ -86,14 +86,14 @@ std::string DmsFieldScope::serialize() {
 std::string DmsFieldScope::compile() {
     std::string result = "";
 
-    for (auto a : int_fields) {
-        result += a.second.compile();
+    for (auto &field : int_fields) {
+        result += field.second.compile();
     }
-    for (auto a : float_fields) {
-        result += a.second.compile();
+    for (auto &field : float_fields) {
+        result += field.second.compile();
     }
-    for (auto a : string_fields) {
-        result += a.second.compile();
+    for (auto &field : string_fields) {
+        result += field.second.compile();
     }
 
     return result;
