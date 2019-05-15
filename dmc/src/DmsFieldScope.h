@@ -3,6 +3,7 @@
 #include <map>
 
 #include "DmsField.h"
+#include "DmsSerializable.h"
 
 class DmsObject;
 
@@ -16,7 +17,7 @@ public:
     void set_field_value(std::string name, int value);
     void set_field_value(std::string name, float value);
     void set_field_value(std::string name, std::string value);
-    void set_field_value(std::string name, DmsObject* object);
+    void set_field_value(std::string name, DmsSerializable* object);
 
     template<typename T>
     T get_field_value(std::string name, bool *found); // Use with eg. get_field_value<int>
@@ -35,7 +36,7 @@ public:
     std::map<std::string, DmsField<int>> int_fields;
     std::map<std::string, DmsField<float>> float_fields;
     std::map<std::string, DmsField<std::string>> string_fields;
-    std::map<std::string, DmsField<DmsObject*>> object_fields;
+    std::map<std::string, DmsField<DmsSerializable*>> object_fields;
 };
 
 template<>

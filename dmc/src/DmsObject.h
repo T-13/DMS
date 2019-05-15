@@ -1,8 +1,9 @@
 #pragma once
 
 #include "DmsFieldScope.h"
+#include "DmsSerializable.h"
 
-class DmsObject {
+class DmsObject: public DmsSerializable{
 public:
     DmsFieldScope field_scope;
 

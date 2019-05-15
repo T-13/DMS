@@ -61,10 +61,16 @@ std::string DmsField<T>::get_name() const {
     return name;
 }
 
+template<>
+inline std::string DmsField<DmsSerializable*>::serialize() {
+    return name + " -> " + value->serialize() + "\n";
+}
+
 template<class T>
 std::string DmsField<T>::serialize() {
     return name + " -> " + std::to_string(value) + "\n";
 }
+
 
 // inline to avoid multiple definitions (function without arguments)
 template<>
