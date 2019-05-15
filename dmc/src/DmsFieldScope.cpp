@@ -41,13 +41,13 @@ void DmsFieldScope::set_field_value(std::string name, std::string value) {
     }
 }
 
-void DmsFieldScope::set_field_value(std::string name, DmsObject* value) {
-    std::map<std::string, DmsField<DmsObject*>>::iterator it = object_fields.find(name);
+void DmsFieldScope::set_field_value(std::string name, DmsSerializable* value) {
+    std::map<std::string, DmsField<DmsSerializable*>>::iterator it = object_fields.find(name);
 
     if (it != object_fields.end()) {
         it->second.set_value(value);
     } else {
-        object_fields[name] = DmsField<DmsObject*>(name, value);
+        object_fields[name] = DmsField<DmsSerializable*>(name, value);
     }
 }
 
@@ -77,6 +77,9 @@ std::string DmsFieldScope::serialize() {
         result += a.second.serialize();
     }
     for (auto a : string_fields) {
+        result += a.second.serialize();
+    }
+    for (auto a : object_fields) {
         result += a.second.serialize();
     }
 

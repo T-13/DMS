@@ -55,7 +55,7 @@ protected:
     // ENEMY ::= #identifier STATS | #identifier STATS ENEMY
     //
     // STATS ::= STAT | STAT STATS
-    // STAT ::= "has" E #identifier
+    // STAT ::= "has" E #identifier | has S #identifier
     //
     // ENCOUNTERS ::= "ENCOUNTERS:" HAPPENINGS
     // SCENARIOS ::= "SCENARIOS:" HAPPENINGS
@@ -91,18 +91,7 @@ protected:
             string_E = "";
 
             token = scanner.next_token();
-            if (token.type() == Token::String) {
-                game->constants->field_scope.set_field_value(lexem, token.lexem());
-
-                token = scanner.next_token();
-                if (token.type() == Token::Identifier) {
-                    return CONSTANT();
-                } else {
-                    return Ok;
-                }
-            } else {
-                if (!E()) return Error;
-            }
+            if (!E()) return Error;
 
             game->constants->field_scope.set_field_value(lexem, string_E);
 
@@ -129,8 +118,14 @@ protected:
         if (token.type() == Token::Identifier) {
             string_OBJECT = token.lexem() + "_";
 
+            DmsObject *playersScope = current;
+            current = new DmsPlayer();
+
             token = scanner.next_token();
             if (!STATS()) return Error;
+
+            playersScope->field_scope.set_field_value(string_OBJECT, current);
+            current = playersScope;
 
             if (token.type() == Token::Identifier) {
                 return PLAYER();
@@ -181,16 +176,11 @@ protected:
 
             string_E = "";
 
-            if (token.type() == Token::String) {
-                string_E = token.lexem();
-                token = scanner.next_token();
-            } else {
-                if (!E()) return Error;
-            }
+            if (!E()) return Error;
 
             if (token.type() == Token::Identifier) {
 
-                current->field_scope.set_field_value(string_OBJECT + token.lexem(), string_E);
+                current->field_scope.set_field_value(token.lexem(), string_E);
 
                 token = scanner.next_token();
                 return Ok;
