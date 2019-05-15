@@ -14,10 +14,10 @@ public:
 
     void set_enclosing_scope(DmsFieldScope *enclosing_scope);
 
-    void set_field_value(std::string name, int value);
-    void set_field_value(std::string name, float value);
-    void set_field_value(std::string name, std::string value);
-    void set_field_value(std::string name, DmsSerializable* object);
+    void set_field_value(std::string name, int value, bool is_resolved);
+    void set_field_value(std::string name, float value, bool is_resolved);
+    void set_field_value(std::string name, std::string value, bool is_resolved);
+    void set_field_value(std::string name, DmsSerializable* object, bool is_resolved);
 
     template<typename T>
     T get_field_value(std::string name, bool *found); // Use with eg. get_field_value<int>
@@ -73,8 +73,9 @@ inline std::string DmsFieldScope::get_field_value(std::string name, bool *found)
 }
 
 template<>
-inline DmsObject* DmsFieldScope::get_field_value(std::string name, bool *found) {
-    std::map<std::string, DmsField<DmsObject*>>::iterator it = object_fields.find(name);
+inline DmsSerializable* DmsFieldScope::get_field_value(std::string name, bool *found) {
+    std::map<std::string, DmsField<DmsSerializable*>>::iterator it = object_fields.find(name);
+    
     if (it != object_fields.end()) {
         *found = true;
         return it->second.get_value();
