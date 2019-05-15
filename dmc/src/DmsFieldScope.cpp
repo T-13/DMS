@@ -1,14 +1,14 @@
 #include "DmsFieldScope.h"
 
 DmsFieldScope::DmsFieldScope()
-        : parent(nullptr) {
+        : enclosing_scope(nullptr) {
 }
 
 DmsFieldScope::~DmsFieldScope() {
 }
 
-void DmsFieldScope::add_parent(DmsObject *parent_) {
-    parent = parent_;
+void DmsFieldScope::set_enclosing_scope(DmsFieldScope *enclosing_scope_) {
+    enclosing_scope = enclosing_scope_;
 }
 
 void DmsFieldScope::set_field_value(std::string name, int value) {
@@ -17,7 +17,7 @@ void DmsFieldScope::set_field_value(std::string name, int value) {
     if (it != int_fields.end()) {
         it->second.set_value(value);
     } else {
-        int_fields[name] = DmsField<int>(name, value, parent);
+        int_fields[name] = DmsField<int>(name, value);
     }
 }
 
@@ -27,7 +27,7 @@ void DmsFieldScope::set_field_value(std::string name, float value) {
     if (it != float_fields.end()) {
         it->second.set_value(value);
     } else {
-        float_fields[name] = DmsField<float>(name, value, parent);
+        float_fields[name] = DmsField<float>(name, value);
     }
 }
 
@@ -37,7 +37,7 @@ void DmsFieldScope::set_field_value(std::string name, std::string value) {
     if (it != string_fields.end()) {
         it->second.set_value(value);
     } else {
-        string_fields[name] = DmsField<std::string>(name, value, parent);
+        string_fields[name] = DmsField<std::string>(name, value);
     }
 }
 

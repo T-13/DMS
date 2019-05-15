@@ -5,6 +5,7 @@
 class DmsObject {
 public:
     DmsObject();
+    DmsObject(DmsFieldScope* enclosing_scope);
     ~DmsObject();
 
     // TODO - Choose serialize or compile or both and choose type str/byte[]...
