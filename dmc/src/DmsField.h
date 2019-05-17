@@ -19,13 +19,15 @@ template<class T>
 class DmsField {
 public:
     DmsField();
-    DmsField(std::string name_, T value_);
+    DmsField(std::string name_, T value_, bool is_resolved_);
     ~DmsField();
 
     T get_value() const;
     bool get_is_resolved() const;
     void set_value(T value_, bool is_resolved_);
     std::string get_name() const;
+
+    bool is_being_resolved = false;
 
     // TODO - Choose serialize or compile or both and choose type str/byte[]...
     std::string serialize();
@@ -42,8 +44,8 @@ DmsField<T>::DmsField() {
 }
 
 template<class T>
-DmsField<T>::DmsField(std::string name_, T value_)
-        : name(name_), value(value_) {
+DmsField<T>::DmsField(std::string name_, T value_, bool is_resolved_)
+        : name(name_), value(value_), is_resolved(is_resolved_) {
 }
 
 template<class T>

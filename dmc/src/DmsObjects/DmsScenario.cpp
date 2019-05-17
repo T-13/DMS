@@ -15,18 +15,17 @@ DmsScenario::DmsScenario(DmsFieldScope *enclosing_scope)
 }
 
 bool DmsScenario::verify() {
-    std::vector<int> int_fields = field_scope.get_all_field_values<int>();
-    std::vector<float> float_fields = field_scope.get_all_field_values<float>();
-    std::vector<std::string> string_fields = field_scope.get_all_field_values<std::string>();
-    std::vector<DmsSerializable*> object_fields = field_scope.get_all_field_values<DmsSerializable*>();
+    auto float_fields = field_scope.get_all_fields<float>();
+    auto string_fields = field_scope.get_all_fields<std::string>();
+    auto object_fields = field_scope.get_all_fields<DmsSerializable*>();
 
     // Contains any unwanted field
-    if (!int_fields.empty() || !float_fields.empty() || !string_fields.empty()) {
+    if (!float_fields.empty() || !string_fields.empty()) {
         return false;
     }
 
     for (const auto &field : object_fields) {
-        if (typeid(field) != typeid(DmsScenario) || typeid(field) != typeid(DmsEncounter)) {
+        if (typeid(field.get_value()) != typeid(DmsScenario) || typeid(field) != typeid(DmsEncounter)) {
             return false;
         }
     }

@@ -2,6 +2,7 @@
 #include <fstream>
 
 #include "Parser.h"
+#include "DmsSemanticModel/Resolver.h"
 
 void usage() {
     std::cout << "./dmc <input>" << std::endl << std::endl;
@@ -39,7 +40,8 @@ int main(int argc, char *argv[]) {
     bool res = parser.parse();
     std::cout << (res ? "Successful!" : "Failed!") << std::endl;
 
-    std::cout << parser.game->serialize() << std::endl;
+    Resolver resolver = Resolver(parser.game);
+    resolver.resolve();
 
     // Cleanup
     in_f.close();

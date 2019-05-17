@@ -15,23 +15,13 @@ DmsFieldScope *DmsFieldScope::get_enclosing_scope() const {
     return enclosing_scope;
 }
 
-void DmsFieldScope::set_field_value(std::string name, int value, bool is_resolved) {
-    std::map<std::string, DmsField<int>>::iterator it = int_fields.find(name);
-
-    if (it != int_fields.end()) {
-        it->second.set_value(value, is_resolved);
-    } else {
-        int_fields[name] = DmsField<int>(name, value);
-    }
-}
-
 void DmsFieldScope::set_field_value(std::string name, float value, bool is_resolved) {
     std::map<std::string, DmsField<float>>::iterator it = float_fields.find(name);
 
     if (it != float_fields.end()) {
         it->second.set_value(value, is_resolved);
     } else {
-        float_fields[name] = DmsField<float>(name, value);
+        float_fields[name] = DmsField<float>(name, value, is_resolved);
     }
 }
 
@@ -41,7 +31,7 @@ void DmsFieldScope::set_field_value(std::string name, std::string value, bool is
     if (it != string_fields.end()) {
         it->second.set_value(value, is_resolved);
     } else {
-        string_fields[name] = DmsField<std::string>(name, value);
+        string_fields[name] = DmsField<std::string>(name, value, is_resolved);
     }
 }
 
@@ -51,16 +41,13 @@ void DmsFieldScope::set_field_value(std::string name, DmsSerializable* value, bo
     if (it != object_fields.end()) {
         it->second.set_value(value, is_resolved);
     } else {
-        object_fields[name] = DmsField<DmsSerializable*>(name, value);
+        object_fields[name] = DmsField<DmsSerializable*>(name, value, is_resolved);
     }
 }
 
 std::vector<std::string> DmsFieldScope::get_all_field_names() {
     std::vector<std::string> result;
 
-    for (const auto &field : int_fields) {
-        result.push_back(field.first);
-    }
     for (const auto &field : float_fields) {
         result.push_back(field.first);
     }
@@ -77,9 +64,6 @@ std::vector<std::string> DmsFieldScope::get_all_field_names() {
 std::string DmsFieldScope::serialize() {
     std::string result = "";
 
-    for (auto &field : int_fields) {
-        result += field.second.serialize();
-    }
     for (auto &field : float_fields) {
         result += field.second.serialize();
     }
@@ -96,9 +80,6 @@ std::string DmsFieldScope::serialize() {
 std::string DmsFieldScope::compile() {
     std::string result = "";
 
-    for (auto &field : int_fields) {
-        result += field.second.compile();
-    }
     for (auto &field : float_fields) {
         result += field.second.compile();
     }

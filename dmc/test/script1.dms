@@ -1,13 +1,14 @@
 CONSTANTS:
 playerName "asd"
 playerHP 1+2+3
+enemyBaseHp playerHP*(3 + 1)
 
 PLAYERS:
 player1 has playerHP*2 hp has 20 dmg has 80 hit_chance has "Nejc" name
 
 ENEMIES:
-enemy1 has 40 hp has 50 dmg has 90 hit_chance has "Timi" name
-enemy2 has 1 hp has 1000 dmg has 1 hit_chance has "Andraž" name
+enemy1 has (enemyBaseHp+2)%playerHP hp has 50 dmg has 90 hit_chance has "Timi" name
+enemy2 has enemyBaseHp*0.01 hp has 1000 dmg has 1 hit_chance has "Andraž" name
 
 ENCOUNTERS:
 encounter1 has enemy1 * 5 + enemy2 * 2

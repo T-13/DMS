@@ -1,6 +1,7 @@
 #pragma once
 
 #include <istream>
+#include <math.h>
 
 #include "Scanner.h"
 #include "DmsGame.h"
@@ -91,12 +92,11 @@ protected:
     bool CONSTANT() {
         if (token.type() == Token::Identifier) {
 
-            std::string lexem = token.lexem();
-            string_E = "";
+            std::string field_name = token.lexem();
 
             token = scanner.next_token();
             if (token.type() == Token::String) {
-                game->constants->field_scope.set_field_value(lexem, token.lexem(), true);
+                game->constants->field_scope.set_field_value(field_name, token.lexem(), true);
                 token = scanner.next_token();
 
                 if (token.type() == Token::Identifier) {
@@ -105,15 +105,17 @@ protected:
                     return Ok;
                 }
             } else {
-                if (!E()) return Error;
-            }
+                float value;
+                std::cout << "Random value: " << value << std::endl;
+                if (!E(value)) return Error;
+                std::cout << "Setting field: " << field_name << " with value: " << value << std::endl;
+                game->constants->field_scope.set_field_value(field_name, value, true);
 
-            game->constants->field_scope.set_field_value(lexem, string_E, false);
-
-            if (token.type() == Token::Identifier) {
-                return CONSTANT();
-            } else {
-                return Ok;
+                if (token.type() == Token::Identifier) {
+                    return CONSTANT();
+                } else {
+                    return Ok;
+                }
             }
         }
         return Error;
@@ -131,7 +133,7 @@ protected:
 
     bool PLAYER() {
         if (token.type() == Token::Identifier) {
-            string_OBJECT = token.lexem();
+            std::string object_name = token.lexem();
 
             DmsObject *playersScope = current;
             current = new DmsPlayer();
@@ -139,7 +141,7 @@ protected:
             token = scanner.next_token();
             if (!STATS()) return Error;
 
-            playersScope->field_scope.set_field_value(string_OBJECT, current, true);
+            playersScope->field_scope.set_field_value(object_name, current, true);
             current = playersScope;
 
             if (token.type() == Token::Identifier) {
@@ -163,7 +165,7 @@ protected:
 
     bool ENEMY() {
         if (token.type() == Token::Identifier) {
-            string_OBJECT = token.lexem();
+            std::string object_name = token.lexem();
 
             DmsObject *enemyScope = current;
             current = new DmsEnemy();
@@ -171,7 +173,7 @@ protected:
             token = scanner.next_token();
             if (!STATS()) return Error;
 
-            enemyScope->field_scope.set_field_value(string_OBJECT, current, true);
+            enemyScope->field_scope.set_field_value(object_name, current, true);
             current = enemyScope;
 
             if (token.type() == Token::Identifier) {
@@ -195,23 +197,26 @@ protected:
         if (token.lexem() == "has") {
             token = scanner.next_token();
 
-            string_E = "";
-            bool resolved = false;
-
             if (token.type() == Token::String) {
-                string_E = token.lexem();
+                std::string value = token.lexem();
                 token = scanner.next_token();
-                resolved = true;
+                if (token.type() == Token::Identifier) {
+                    current->field_scope.set_field_value(token.lexem(), value, true);
+                    token = scanner.next_token();
+                    return Ok;
+                }
             } else {
-                if (!E()) return Error;
+                float new_value;
+                if (!E(new_value)) return Error;
+
+                if (token.type() == Token::Identifier) {
+                    current->field_scope.set_field_value(token.lexem(), new_value, true);
+                    token = scanner.next_token();
+                    return Ok;
+                }
             }
 
-            if (token.type() == Token::Identifier) {
-                current->field_scope.set_field_value(token.lexem(), string_E, resolved);
 
-                token = scanner.next_token();
-                return Ok;
-            }
         }
         return Error;
     }
@@ -264,10 +269,10 @@ protected:
 
     bool THING() {
         if (token.type() == Token::Identifier) {
-            string_THING = token.lexem();
+            std::string occurrence_name = token.lexem();
 
             token = scanner.next_token();
-            if (!OCCURRENCES()) return Error;
+            if (!OCCURRENCES(occurrence_name)) return Error;
 
             if (token.lexem() == "+") {
                 token = scanner.next_token();
@@ -280,13 +285,13 @@ protected:
         return Error;
     }
 
-    bool OCCURRENCES() {
+    bool OCCURRENCES(std::string occurrence_name) {
         if (token.lexem() == "*") {
 
             token = scanner.next_token();
 
             if (token.type() == Token::Float) {
-                current->field_scope.set_field_value(string_THING, token.lexem(), false);
+                current->field_scope.set_field_value(occurrence_name, token.lexem(), false);
 
                 token = scanner.next_token();
                 return Ok;
@@ -294,7 +299,7 @@ protected:
                 return Error;
             }
         }
-        current->field_scope.set_field_value(string_THING, 1, false);
+        current->field_scope.set_field_value(occurrence_name, 1, false);
         return Ok;
     }
 
@@ -309,57 +314,87 @@ protected:
         return Error;
     }
 
-    bool E() {
-        return T() && EE();
+    bool E(float &out_value) {
+        float in_value;
+        bool ret = T(in_value);
+        ret = ret && EE(in_value, out_value);
+        return ret;
     }
 
-    bool EE() {
+    bool EE(float &in_value, float &out_value) {
         if (token.lexem() == "+" || token.lexem() == "-") {
-
-            string_E += token.lexem();
-
+            std::string sign = token.lexem();
             token = scanner.next_token();
-            return T() && EE();
+
+            float new_in_value;
+            float new_out_value;
+            bool ret = T(new_in_value);
+            ret = ret && EE(new_in_value, new_out_value);
+            if (sign == "-") {
+                out_value = in_value - new_out_value;
+            } else {
+                out_value = in_value + new_out_value;
+            }
+            return ret;
         }
+        out_value = in_value;
         return Ok;
     }
 
-    bool T() {
-        return F() && TT();
+    bool T(float &out_value) {
+        float in_value;
+        bool ret = F(in_value);
+        ret = ret && TT(in_value, out_value);
+        return ret;
     }
 
-    bool TT() {
+    bool TT(float &in_value, float &out_value) {
         if (token.lexem() == "*" || token.lexem() == "/" || token.lexem() == "^" || token.lexem() == "%") {
-
-            string_E += token.lexem();
-
+            std::string sign = token.lexem();
             token = scanner.next_token();
-            return F() && TT();
+
+            float new_in_value;
+            float new_out_value;
+            bool ret = F(new_in_value);
+            ret = ret && TT(new_in_value, new_out_value);
+            
+            if (sign == "*") {
+                out_value = in_value * new_out_value;
+            } else if (sign == "/") {
+                out_value = in_value / new_out_value;
+            } else if (sign == "^") {
+                out_value = pow(in_value, new_out_value);
+            } else if (sign == "%") {
+                out_value = int(in_value) % int(new_out_value);
+            }
+
+            return ret;
         }
+        out_value = in_value;
         return Ok;
     }
 
-    bool F() {
+    bool F(float &out_value) {
         if (token.lexem() == "(") {
 
-            string_E += token.lexem();
-
             token = scanner.next_token();
-            if (!E()) return Error;
+            if (!E(out_value)) return Error;
 
             if (token.lexem() == ")") {
-
-                string_E += token.lexem();
 
                 token = scanner.next_token();
                 return Ok;
             } else {
                 return Error;
             }
-        } else if (token.type() == Token::Float || token.type() == Token::Identifier) {
-
-            string_E += token.lexem();
-
+        } else if (token.type() == Token::Float) {
+            out_value = std::stof(token.lexem());
+            std::cout << "Float: " << token.lexem() << " -> " << out_value << std::endl;
+            token = scanner.next_token();
+            return Ok;
+        } else if (token.type() == Token::Identifier) {
+            out_value = game->constants->field_scope.get_field<float>(token.lexem())->get_value();
+            std::cout << "Identifier: " << token.lexem() << " : " << out_value << std::endl;
             token = scanner.next_token();
             return Ok;
         }
@@ -376,10 +411,6 @@ private:
     Token token;
     bool result;
 
-    std::string string_E = "";
-    std::string string_STAT = "";
-    std::string string_OBJECT = "";
-    std::string string_THING = "";
     DmsObject *current;
     DmsObject *scope;
 };
