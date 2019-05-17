@@ -17,6 +17,6 @@ encounter2 has enemy2 * 10
 SCENARIOS:
 scenario1 has encounter1 + encounter2 + encounter1
 scenario2 has encounter2 * 5
-scenario3 has scenario2 + scenario1
+scenario3 has encounter1 * 3 + encounter2
 
 START scenario3
