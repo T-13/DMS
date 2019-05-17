@@ -5,6 +5,9 @@
 #include "Scanner.h"
 #include "DmsGame.h"
 #include "DmsObjects/DmsPlayer.h"
+#include "DmsObjects/DmsEnemy.h"
+#include "DmsObjects/DmsDuplicator.h"
+#include "DmsObjects/DmsScenario.h"
 
 class Parser {
 public:
@@ -163,7 +166,7 @@ protected:
             string_OBJECT = token.lexem();
 
             DmsObject *enemyScope = current;
-            current = new DmsPlayer();
+            current = new DmsEnemy();
 
             token = scanner.next_token();
             if (!STATS()) return Error;
@@ -236,15 +239,18 @@ protected:
     bool HAPPENINGS() {
         if (token.type() == Token::Identifier) {
 
+            scope = current;
+            current = new DmsObject();
+
             std::string lexem = token.lexem();
             token = scanner.next_token();
             if (token.lexem() == "has") {
                 token = scanner.next_token();
 
-                string_THING = "";
                 if (!THING()) return Error;
 
-                current->field_scope.set_field_value(lexem, string_THING, false);
+                scope->field_scope.set_field_value(lexem, current, true);
+                current = scope;
 
                 if (token.type() == Token::Identifier) {
                     return HAPPENINGS();
@@ -258,14 +264,12 @@ protected:
 
     bool THING() {
         if (token.type() == Token::Identifier) {
-            string_THING += token.lexem();
+            string_THING = token.lexem();
 
             token = scanner.next_token();
             if (!OCCURRENCES()) return Error;
 
             if (token.lexem() == "+") {
-                string_THING += token.lexem();
-
                 token = scanner.next_token();
                 return THING();
             } else {
@@ -278,12 +282,11 @@ protected:
 
     bool OCCURRENCES() {
         if (token.lexem() == "*") {
-            string_THING += token.lexem();
 
             token = scanner.next_token();
 
             if (token.type() == Token::Float) {
-                string_THING += token.lexem();
+                current->field_scope.set_field_value(string_THING, token.lexem(), false);
 
                 token = scanner.next_token();
                 return Ok;
@@ -291,6 +294,7 @@ protected:
                 return Error;
             }
         }
+        current->field_scope.set_field_value(string_THING, 1, false);
         return Ok;
     }
 
@@ -377,4 +381,5 @@ private:
     std::string string_OBJECT = "";
     std::string string_THING = "";
     DmsObject *current;
+    DmsObject *scope;
 };
