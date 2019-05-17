@@ -3,7 +3,7 @@
 #include "DmsFieldScope.h"
 #include "DmsSerializable.h"
 
-class DmsObject: public DmsSerializable{
+class DmsObject: public DmsSerializable {
 public:
     DmsFieldScope field_scope;
 

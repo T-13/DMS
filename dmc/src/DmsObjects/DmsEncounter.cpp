@@ -1,8 +1,9 @@
 #include "DmsEncounter.h"
 
+#include <typeinfo>
+
 #include "DmsEnemy.h"
 #include "DmsPlayer.h"
-#include <typeinfo>
 
 DmsEncounter::DmsEncounter() {
 }

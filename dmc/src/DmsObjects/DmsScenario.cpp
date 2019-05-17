@@ -1,7 +1,8 @@
 #include "DmsScenario.h"
 
-#include "DmsEncounter.h"
 #include <typeinfo>
+
+#include "DmsEncounter.h"
 
 DmsScenario::DmsScenario() {
 }

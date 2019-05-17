@@ -44,7 +44,7 @@ inline DmsField<float> *DmsFieldScope::get_field(std::string name) {
     if (it != float_fields.end()) {
         return &it->second;
     }
-    if(enclosing_scope != nullptr) {
+    if (enclosing_scope != nullptr) {
         return enclosing_scope->get_field<float>(name);
     }
     return nullptr;
@@ -56,7 +56,7 @@ inline DmsField<std::string> *DmsFieldScope::get_field(std::string name) {
     if (it != string_fields.end()) {
         return &it->second;
     }
-    if(enclosing_scope != nullptr) {
+    if (enclosing_scope != nullptr) {
         return get_field<std::string>(name);
     }
     return nullptr;
