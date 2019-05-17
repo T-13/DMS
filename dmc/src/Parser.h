@@ -23,7 +23,6 @@ public:
         // Lexical error or premature EOF (syntax error)
         if (!token.eof()) {
             if (token.error()) {
-                std::cout << "lex error: " << token << std::endl;
                 return Error;
             } else {
                 result = Error;
@@ -32,7 +31,6 @@ public:
 
         // Syntax error
         if (error()) {
-            std::cout << "parse error: " << token << " unexpected" << std::endl;
             return Error;
         }
 
@@ -106,9 +104,7 @@ protected:
                 }
             } else {
                 float value;
-                std::cout << "Random value: " << value << std::endl;
                 if (!E(value)) return Error;
-                std::cout << "Setting field: " << field_name << " with value: " << value << std::endl;
                 game->constants->field_scope.set_field_value(field_name, value, true);
 
                 if (token.type() == Token::Identifier) {
@@ -389,14 +385,17 @@ protected:
             }
         } else if (token.type() == Token::Float) {
             out_value = std::stof(token.lexem());
-            std::cout << "Float: " << token.lexem() << " -> " << out_value << std::endl;
             token = scanner.next_token();
             return Ok;
         } else if (token.type() == Token::Identifier) {
-            out_value = game->constants->field_scope.get_field<float>(token.lexem())->get_value();
-            std::cout << "Identifier: " << token.lexem() << " : " << out_value << std::endl;
-            token = scanner.next_token();
-            return Ok;
+            DmsField<float> *field = game->constants->field_scope.get_field<float>(token.lexem());
+            if (field) {
+                out_value = field->get_value();
+                token = scanner.next_token();
+                return Ok;
+            } else {
+                return Error;
+            }
         }
         return Error;
     }
