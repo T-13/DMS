@@ -30,7 +30,6 @@ public:
     bool is_being_resolved = false;
 
     std::string serialize();
-    std::string compile();
 
 protected:
     std::string name;
@@ -86,9 +85,4 @@ inline std::string DmsField<std::string>::serialize() {
 template<>
 inline std::string DmsField<DmsSerializable*>::serialize() {
     return name + " -> " + value->serialize() + "\n";
-}
-
-template<class T>
-std::string DmsField<T>::compile() {
-    return ""; // TODO
 }

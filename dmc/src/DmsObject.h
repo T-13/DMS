@@ -13,7 +13,5 @@ public:
     virtual ~DmsObject();
 
     virtual std::string serialize() { return field_scope.serialize(); };
-    virtual std::string compile() { return field_scope.compile(); };
-
     virtual bool verify() { return true; };
 };

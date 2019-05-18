@@ -27,7 +27,6 @@ public:
     std::vector<DmsField<T>> get_all_fields(); // Use with eg. get_all_fields<int>()
 
     std::string serialize();
-    std::string compile();
 
  private:
     DmsFieldScope* enclosing_scope;

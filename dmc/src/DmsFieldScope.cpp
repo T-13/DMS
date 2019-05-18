@@ -76,19 +76,3 @@ std::string DmsFieldScope::serialize() {
 
     return result;
 }
-
-std::string DmsFieldScope::compile() {
-    std::string result = "";
-
-    for (auto &field : float_fields) {
-        result += field.second.compile();
-    }
-    for (auto &field : string_fields) {
-        result += field.second.compile();
-    }
-    for (auto &field : object_fields) {
-        result += field.second.compile();
-    }
-
-    return result;
-}
