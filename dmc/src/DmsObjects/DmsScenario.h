@@ -9,8 +9,6 @@
 #include "DmsDuplicator.h"
 
 class DmsScenario: public DmsObject {
-    std::vector<DmsDuplicator<DmsEncounter>*> encounters;
-
 public:
     DmsScenario();
     DmsScenario(const DmsScenario &scenario);
@@ -21,5 +19,8 @@ public:
     void addEncounter(DmsEncounter *encounter, int amount);
     std::vector<DmsDuplicator<DmsEncounter>*> getEncounters() { return encounters; }
     std::string serialize();
+
+private:
+    std::vector<DmsDuplicator<DmsEncounter>*> encounters;
 };
 

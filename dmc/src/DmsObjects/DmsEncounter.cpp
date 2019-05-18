@@ -33,10 +33,10 @@ void DmsEncounter::addSpawner(DmsEnemy *enemy, int amount) {
     enemies.push_back(new DmsDuplicator<DmsEnemy>(enemy, amount));
 }
 
-std::string DmsEncounter::serialize(){
+std::string DmsEncounter::serialize() {
     std::string result = "\n";
     for (auto dupe : enemies){
-        result += dupe->get_clone()->serialize() + " amount: " + std::to_string(dupe->get_amount()) + "\n";
+        result += dupe->get_clone()->serialize() + "  amount: " + std::to_string(dupe->get_amount()) + "\n";
     }
     return result;
 }

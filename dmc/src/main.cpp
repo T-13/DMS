@@ -6,7 +6,7 @@
 
 void usage() {
     std::cout << "./dmc <input>" << std::endl << std::endl;
-    std::cout << "Compile input file." << std::endl;
+    std::cout << "Run DMS file." << std::endl;
     std::cout << "<input>" << std::endl;
     std::cout << "    File path (string)." << std::endl;
 }
@@ -36,9 +36,10 @@ int main(int argc, char *argv[]) {
     }
 
     // Syntax analysis / Parse
+    std::cout << "Parsing ..." << std::endl;
     Parser parser(&in_f);
     bool res = parser.parse();
-    std::cout << (res ? "Successful!" : "Failed!") << std::endl;
+    std::cout << "-> " << (res ? "Successful!" : "Failed!") << std::endl;
 
     Resolver resolver = Resolver(parser.game);
     resolver.resolve();

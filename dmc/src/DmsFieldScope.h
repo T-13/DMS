@@ -26,7 +26,6 @@ public:
     template<typename T>
     std::vector<DmsField<T>> get_all_fields(); // Use with eg. get_all_fields<int>()
 
-    // TODO - Choose serialize or compile or both and choose type str/byte[]...
     std::string serialize();
     std::string compile();
 

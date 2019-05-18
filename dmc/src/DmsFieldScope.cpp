@@ -70,8 +70,8 @@ std::string DmsFieldScope::serialize() {
     for (auto &field : string_fields) {
         result += field.second.serialize();
     }
-    for (auto a : object_fields) {
-        result += a.second.serialize();
+    for (auto &field : object_fields) {
+        result += field.second.serialize();
     }
 
     return result;
@@ -86,8 +86,8 @@ std::string DmsFieldScope::compile() {
     for (auto &field : string_fields) {
         result += field.second.compile();
     }
-    for (auto a : object_fields) {
-        result += a.second.serialize();
+    for (auto &field : object_fields) {
+        result += field.second.compile();
     }
 
     return result;

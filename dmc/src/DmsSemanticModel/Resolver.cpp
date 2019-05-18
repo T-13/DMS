@@ -10,22 +10,21 @@ Resolver::Resolver(DmsGame *game_) {
 }
 
 Node Resolver::resolve() {
-    std::cout << "Valid scenarios and constants..." << std::endl << "Validating...";
-    std::cout << "-------------------------------------" << std::endl;
+    std::cout << std::endl << "Resolving ..." << std::endl;
 
     for (auto player : game->players->field_scope.get_all_fields<DmsSerializable*>()) {
         if (static_cast<DmsEnemy*>(player.get_value())->verify()) {
-            std::cout << "Invalid player:" << player.get_name() << std::endl;
+            std::cout << "-> [Invalid] Player:" << player.get_name() << std::endl;
         } else {
-            std::cout << "Valid player: " << player.get_name() << std::endl;
+            std::cout << "-> [Valid] Player: " << player.get_name() << std::endl;
         }
     }
 
     for (auto enemy : game->enemies->field_scope.get_all_fields<DmsSerializable*>()) {
         if (static_cast<DmsEnemy*>(enemy.get_value())->verify()) {
-            std::cout << "Invalid enemy" << enemy.get_name() << std::endl;
+            std::cout << "-> [Invalid] Enemy" << enemy.get_name() << std::endl;
         } else {
-            std::cout << "Valid enemy: " << enemy.get_name() << std::endl;
+            std::cout << "-> [Valid] Enemy: " << enemy.get_name() << std::endl;
         }
     }
 
@@ -43,10 +42,9 @@ Node Resolver::resolve() {
         }
     }
 
-    std::cout << "Valid encounters" << std::endl;
-    std::cout << "-------------------------------------" << std::endl;
-    std::cout << "Serialize: " << std::endl << game->serialize() << std::endl;
-    std::cout << "Running:" << std::endl;
+    std::cout << "-> [Valid] Encounters" << std::endl;
+    std::cout << std::endl << "Serializing ... " << game->serialize();
+    std::cout << "Running ... TODO" << std::endl;
 
     return Node();
 }

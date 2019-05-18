@@ -39,9 +39,10 @@ void DmsScenario::addEncounter(DmsEncounter *encounter, int amount) {
 }
 
 std::string DmsScenario::serialize() {
-    std::string result = "\n";
+    std::string result = "";
     for (auto dupe : encounters) {
-        result += dupe->get_clone()->serialize() + " amount: " + std::to_string(dupe->get_amount()) + "\n";
+        result += dupe->get_clone()->serialize() + "  amount: " + std::to_string(dupe->get_amount());
     }
+    result += "\n";
     return result;
 }

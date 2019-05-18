@@ -295,24 +295,25 @@ protected:
 
             token = scanner.next_token();
             if (token.type() == Token::Float) {
-                if (isEncounter){
+                if (isEncounter) {
+                    // Encounter
                     float temp = 0;
                     DmsField<float> *previous = current->field_scope.get_field<float>(occurrence_name);
-                    if (previous != nullptr)
+                    if (previous != nullptr) {
                         temp += previous->get_value();
+                    }
                     current->field_scope.set_field_value(occurrence_name, std::stof(token.lexem()) + temp, true);
-                }
-                // Scenario
-                else {
+                } else {
+                    // Scenario
                     auto field = game->encounters->field_scope.get_field<DmsSerializable*>(occurrence_name);
                     if (field == nullptr) {
                         return Error;
                     }
-                    DmsEncounter *encounter = (DmsEncounter*)field->get_value();
-                    
-                    ((DmsScenario*)current)->addEncounter(encounter, std::stof(token.lexem()));
+                    DmsEncounter *encounter = static_cast<DmsEncounter*>(field->get_value());
+
+                    static_cast<DmsScenario*>(current)->addEncounter(encounter, std::stof(token.lexem()));
                 }
-                    
+
 
                 token = scanner.next_token();
                 return Ok;
@@ -321,18 +322,18 @@ protected:
             }
         }
 
-        if (isEncounter){
+        if (isEncounter) {
+            // Encounter
             current->field_scope.set_field_value(occurrence_name, 1, true);
-        }
-        // Scenario
-        else {
+        } else {
+            // Scenario
             auto field = game->encounters->field_scope.get_field<DmsSerializable*>(occurrence_name);
             if (field == nullptr) {
                 return Error;
             }
-            DmsEncounter *encounter = (DmsEncounter*)field->get_value();
-            
-            ((DmsScenario*)current)->addEncounter(encounter, 1);
+            DmsEncounter *encounter = static_cast<DmsEncounter*>(field->get_value());
+
+            static_cast<DmsScenario*>(current)->addEncounter(encounter, 1);
         }
 
         return Ok;
@@ -342,7 +343,7 @@ protected:
         if (token.lexem() == "START") {
             token = scanner.next_token();
             if (token.type() == Token::Identifier) {
-                DmsField<DmsScenario*> *scenario = (DmsField<DmsScenario*>*)(game->scenarios->field_scope.get_field<DmsSerializable*>(token.lexem()));
+                DmsField<DmsScenario*> *scenario = reinterpret_cast<DmsField<DmsScenario*>*>(game->scenarios->field_scope.get_field<DmsSerializable*>(token.lexem()));
                 if (scenario != nullptr) {
                     game->starting_scenario = scenario->get_value();
                     token = scanner.next_token();
@@ -398,7 +399,7 @@ protected:
             float new_out_value;
             bool ret = F(new_in_value);
             ret = ret && TT(new_in_value, new_out_value);
-            
+
             if (sign == "*") {
                 out_value = in_value * new_out_value;
             } else if (sign == "/") {

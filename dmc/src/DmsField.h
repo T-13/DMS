@@ -29,7 +29,6 @@ public:
 
     bool is_being_resolved = false;
 
-    // TODO - Choose serialize or compile or both and choose type str/byte[]...
     std::string serialize();
     std::string compile();
 
@@ -73,21 +72,20 @@ std::string DmsField<T>::get_name() const {
     return name;
 }
 
-template<>
-inline std::string DmsField<DmsSerializable*>::serialize() {
-    return name + " -> " + value->serialize() + "\n";
-}
-
 template<class T>
 std::string DmsField<T>::serialize() {
     return name + " -> " + std::to_string(value) + "\n";
 }
 
-
 // inline to avoid multiple definitions (function without arguments)
 template<>
 inline std::string DmsField<std::string>::serialize() {
     return name + " -> " + value + "\n";
+}
+
+template<>
+inline std::string DmsField<DmsSerializable*>::serialize() {
+    return name + " -> " + value->serialize() + "\n";
 }
 
 template<class T>
