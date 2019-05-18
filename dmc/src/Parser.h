@@ -241,14 +241,23 @@ protected:
         if (token.type() == Token::Identifier) {
 
             scope = current;
-            current = new DmsObject();
+            current = nullptr;
+            bool isEncounter = false;
+            if (scope == game->encounters) {
+                current = new DmsEncounter();
+                isEncounter = true;
+            } else if (scope == game->scenarios) {
+                current = new DmsScenario();
+            } else {
+                return Error;
+            }
 
             std::string lexem = token.lexem();
             token = scanner.next_token();
             if (token.lexem() == "has") {
                 token = scanner.next_token();
 
-                if (!THING()) return Error;
+                if (!THING(isEncounter)) return Error;
 
                 scope->field_scope.set_field_value(lexem, current, true);
                 current = scope;
@@ -263,16 +272,16 @@ protected:
         return Error;
     }
 
-    bool THING() {
+    bool THING(bool isEncounter) {
         if (token.type() == Token::Identifier) {
             std::string occurrence_name = token.lexem();
 
             token = scanner.next_token();
-            if (!OCCURRENCES(occurrence_name)) return Error;
+            if (!OCCURRENCES(occurrence_name, isEncounter)) return Error;
 
             if (token.lexem() == "+") {
                 token = scanner.next_token();
-                return THING();
+                return THING(isEncounter);
             } else {
                 return Ok;
             }
@@ -281,13 +290,29 @@ protected:
         return Error;
     }
 
-    bool OCCURRENCES(std::string occurrence_name) {
+    bool OCCURRENCES(std::string occurrence_name, bool isEncounter) {
         if (token.lexem() == "*") {
 
             token = scanner.next_token();
-
             if (token.type() == Token::Float) {
-                current->field_scope.set_field_value(occurrence_name, token.lexem(), false);
+                if (isEncounter){
+                    float temp = 0;
+                    DmsField<float> *previous = current->field_scope.get_field<float>(occurrence_name);
+                    if (previous != nullptr)
+                        temp += previous->get_value();
+                    current->field_scope.set_field_value(occurrence_name, std::stof(token.lexem()) + temp, true);
+                }
+                // Scenario
+                else {
+                    auto field = game->encounters->field_scope.get_field<DmsSerializable*>(occurrence_name);
+                    if (field == nullptr) {
+                        return Error;
+                    }
+                    DmsEncounter *encounter = (DmsEncounter*)field->get_value();
+                    
+                    ((DmsScenario*)current)->addEncounter(encounter, std::stof(token.lexem()));
+                }
+                    
 
                 token = scanner.next_token();
                 return Ok;
@@ -295,7 +320,21 @@ protected:
                 return Error;
             }
         }
-        current->field_scope.set_field_value(occurrence_name, 1, false);
+
+        if (isEncounter){
+            current->field_scope.set_field_value(occurrence_name, 1, true);
+        }
+        // Scenario
+        else {
+            auto field = game->encounters->field_scope.get_field<DmsSerializable*>(occurrence_name);
+            if (field == nullptr) {
+                return Error;
+            }
+            DmsEncounter *encounter = (DmsEncounter*)field->get_value();
+            
+            ((DmsScenario*)current)->addEncounter(encounter, 1);
+        }
+
         return Ok;
     }
 
@@ -303,8 +342,14 @@ protected:
         if (token.lexem() == "START") {
             token = scanner.next_token();
             if (token.type() == Token::Identifier) {
-                token = scanner.next_token();
-                return Ok;
+                DmsField<DmsScenario*> *scenario = (DmsField<DmsScenario*>*)(game->scenarios->field_scope.get_field<DmsSerializable*>(token.lexem()));
+                if (scenario != nullptr) {
+                    game->starting_scenario = scenario->get_value();
+                    token = scanner.next_token();
+                    return Ok;
+                } else {
+                    return Error;
+                }
             }
         }
         return Error;

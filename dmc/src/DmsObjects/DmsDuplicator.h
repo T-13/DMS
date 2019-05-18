@@ -2,9 +2,16 @@
 
 #include "../DmsObject.h"
 
-class DmsDuplicator: public DmsObject {
+
+template<class T>
+class DmsDuplicator {
+    T *original = nullptr;
+    int amount;
+
 public:
     DmsDuplicator();
-    DmsDuplicator(const DmsDuplicator &duplicater);
-    DmsDuplicator(DmsFieldScope *enclosing_scope);
+    DmsDuplicator(T *original_, int amount_): original(original_), amount(amount_){};
+    
+    int get_amount() { return amount; };
+    T *get_clone() { return new T(*original); };
 };
