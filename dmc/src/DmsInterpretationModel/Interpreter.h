@@ -4,6 +4,7 @@
 #include <string>
 #include <iostream>
 #include <algorithm>
+#include <random>
 
 #include "../DmsGame.h"
 #include "../DmsObjects/DmsDuplicator.h"
@@ -38,6 +39,9 @@ private:
 class Interpreter {
 public:
     bool run(DmsGame *game) {
+        mt = std::mt19937(rd);
+        dist = std::uniform_real_distribution<float>(0.0f, 1.0f);
+
         try {
             // Set current game
             current_game = game;
@@ -58,10 +62,24 @@ public:
 
 private:
     DmsGame *current_game;
+
+    std::random_device rd;
+    std::mt19937 mt;
+    std::uniform_real_distribution<float> dist;
+
+    float get_random_float() {
+        return dist(mt);
+    }
+
+    int get_random_int(int min, int max) {
+        std::uniform_int_distribution uid(min, max);
+        return uid(mt);
+    }
 };
 
 template<>
 inline void Interpreter::run(DmsScenario *scenario){
+    std::cout << "Running scenario: " << scenario->field_scope.get_field<std::string>("name")->get_value() << std::endl;
     auto encounter_cloners = scenario->getEncounters();
     for (int i = 0; i < encounter_cloners.size(); ++i) {
         for (int j = 0; j < encounter_cloners[i]->get_amount(); ++j) {
@@ -72,6 +90,8 @@ inline void Interpreter::run(DmsScenario *scenario){
 
 template<>
 inline void Interpreter::run(DmsEncounter *encounter){
+    std::cout << "Running encounter: " << encounter->field_scope.get_field<std::string>("name")->get_value() << std::endl;
+
     auto enemy_cloners = encounter->getSpawners();
     std::vector<DmsEnemy*> enemies;
     std::vector<DmsPlayer*> players;
@@ -99,11 +119,6 @@ inline void Interpreter::run(DmsEncounter *encounter){
 
     // Run Dmg simulation
     while(!enemies.empty() && !players.empty()) {
-        int i = 0;
-        int j = 0;
-
-        if (i <)
-
     }
 
     // clear memorry
