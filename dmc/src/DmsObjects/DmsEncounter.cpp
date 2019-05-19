@@ -10,6 +10,16 @@ DmsEncounter::DmsEncounter() {
 
 DmsEncounter::DmsEncounter(const DmsEncounter &encounter)
         : DmsObject(encounter.field_scope.get_enclosing_scope()) {
+    // Delete
+    for(auto enemies_cloner : enemies){
+        delete enemies_cloner;
+    }
+    // Clear vecotr
+    enemies.clear();
+    // Fill with original's cloner's clones
+    for(auto enemies_cloner : encounter.enemies) {
+        enemies.push_back(new DmsDuplicator<DmsEnemy>(*enemies_cloner));
+    }
 }
 
 DmsEncounter::DmsEncounter(DmsFieldScope *enclosing_scope)
