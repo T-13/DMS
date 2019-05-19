@@ -4,7 +4,7 @@ DmsEnemy::DmsEnemy() {
 }
 
 DmsEnemy::DmsEnemy(const DmsEnemy &enemy)
-        : DmsCharacter(enemy.field_scope.get_enclosing_scope()) {
+        : DmsCharacter(enemy) {
 }
 
 DmsEnemy::DmsEnemy(DmsFieldScope *enclosing_scope)

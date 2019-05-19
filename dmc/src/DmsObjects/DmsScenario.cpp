@@ -8,7 +8,17 @@ DmsScenario::DmsScenario() {
 }
 
 DmsScenario::DmsScenario(const DmsScenario &scenario)
-        : DmsObject(scenario.field_scope.get_enclosing_scope()) {
+        : DmsObject(scenario) {
+            // Delete
+            for(auto encounter_cloner : encounters){
+                delete encounter_cloner;
+            }
+            // Clear vecotr
+            encounters.clear();
+            // Fill with original's cloner's clones
+            for(auto encounter_cloner : scenario.encounters) {
+                encounters.push_back(new DmsDuplicator<DmsEncounter>(*encounter_cloner));
+            }
 }
 
 DmsScenario::DmsScenario(DmsFieldScope *enclosing_scope)

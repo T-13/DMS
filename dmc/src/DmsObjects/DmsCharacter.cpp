@@ -4,7 +4,7 @@ DmsCharacter::DmsCharacter() {
 }
 
 DmsCharacter::DmsCharacter(const DmsCharacter &character)
-        : DmsObject(character.field_scope.get_enclosing_scope()) {
+        : DmsObject(character) {
 }
 
 DmsCharacter::DmsCharacter(DmsFieldScope *enclosing_scope)

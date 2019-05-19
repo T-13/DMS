@@ -4,7 +4,7 @@ DmsPlayer::DmsPlayer() {
 }
 
 DmsPlayer::DmsPlayer(const DmsPlayer &player)
-        : DmsCharacter(player.field_scope.get_enclosing_scope()) {
+        : DmsCharacter(player) {
 }
 
 DmsPlayer::DmsPlayer(DmsFieldScope *enclosing_scope)
