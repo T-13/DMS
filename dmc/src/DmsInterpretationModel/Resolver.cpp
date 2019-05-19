@@ -9,7 +9,7 @@ Resolver::Resolver(DmsGame *game_) {
     game = game_;
 }
 
-Node Resolver::resolve() {
+void Resolver::resolve() {
     std::cout << std::endl << "Resolving ..." << std::endl;
 
     for (auto player : game->players->field_scope.get_all_fields<DmsSerializable*>()) {
@@ -28,7 +28,7 @@ Node Resolver::resolve() {
         }
     }
 
-    // Only unresolved are encounters
+    // Only unresolved object left are encounters
     for (auto encounter_field : game->encounters->field_scope.get_all_fields<DmsSerializable*>()) {
         // Resolve encounters
         DmsEncounter* encounter = static_cast<DmsEncounter*>(encounter_field.get_value());
@@ -45,6 +45,4 @@ Node Resolver::resolve() {
     std::cout << "-> [Valid] Encounters" << std::endl;
     std::cout << std::endl << "Serializing ... " << game->serialize();
     std::cout << "Running ... TODO" << std::endl;
-
-    return Node();
 }

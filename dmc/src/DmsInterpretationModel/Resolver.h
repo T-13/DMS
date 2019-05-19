@@ -4,7 +4,6 @@
 #include <string>
 
 #include "../DmsGame.h"
-#include "Node.h"
 
 class ResolveException: public std::exception {
 public:
@@ -33,7 +32,7 @@ class Resolver {
 public:
     Resolver(DmsGame* game_);
 
-    Node resolve();
+    void resolve();
 
 private:
     DmsGame* game;
