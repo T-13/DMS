@@ -36,7 +36,7 @@ bool DmsEncounter::verify() {
         return false;
     }
 
-    return true;
+    return true && field_scope.get_field<std::string>("name") != nullptr;
 }
 
 void DmsEncounter::addSpawner(DmsEnemy *enemy, int amount) {

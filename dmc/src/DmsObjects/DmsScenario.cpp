@@ -41,7 +41,7 @@ bool DmsScenario::verify() {
         return false;
     }
 
-    return true;
+    return true && field_scope.get_field<std::string>("name") != nullptr;
 }
 
 void DmsScenario::addEncounter(DmsEncounter *encounter, int amount) {
