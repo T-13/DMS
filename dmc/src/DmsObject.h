@@ -8,7 +8,7 @@ public:
     DmsFieldScope field_scope;
 
     DmsObject();
-    DmsObject(const DmsObject &/*object*/);
+    DmsObject(const DmsObject &object);
     DmsObject(DmsFieldScope* enclosing_scope);
     virtual ~DmsObject();
 

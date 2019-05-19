@@ -6,6 +6,10 @@ DmsFieldScope::DmsFieldScope()
 
 DmsFieldScope::DmsFieldScope(const DmsFieldScope &original)
         : enclosing_scope(original.enclosing_scope) {
+
+            float_fields.clear();
+            string_fields.clear();
+            object_fields.clear();
             
             for(auto field : original.get_all_fields<float>()) {
                 set_field_value(field.get_name(), field.get_value(), field.get_is_resolved());
