@@ -461,3 +461,5 @@ private:
     DmsObject *current;
     DmsObject *scope;
 };
+
+// TODO - better error explenation? Something or something expected?

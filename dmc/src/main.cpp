@@ -2,7 +2,7 @@
 #include <fstream>
 
 #include "Parser.h"
-#include "DmsSemanticModel/Resolver.h"
+#include "DmsInterpretationModel/Resolver.h"
 
 void usage() {
     std::cout << "./dmc <input>" << std::endl << std::endl;

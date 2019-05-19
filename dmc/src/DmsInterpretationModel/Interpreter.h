@@ -41,15 +41,15 @@ private:
 
 class Interpreter {
 public:
-    bool run(DmsGame *game) {
-        mt = std::mt19937(rd);
+    void run(DmsGame *game) {
+        m_generator = std::mt19937(std::random_device()());
         dist = std::uniform_real_distribution<float>(0.0f, 1.0f);
 
         try {
             // Set current game
             current_game = game;
             // Start current game
-            run(game->starting_scenario);
+            run_scenario(game->starting_scenario);
         } catch (std::exception e) {
             if (typeid(e) != typeid(RuntimeException)) {
                 throw new RuntimeException(e.what(), RuntimeException::State::UnknownError);
@@ -60,42 +60,40 @@ public:
         
     };
 
-    template<class T>
-    void run(T *dmsObject);
-
 private:
+    void run_scenario(DmsScenario *scenario);
+    void run_encounter(DmsEncounter *encounter);
+
     DmsGame *current_game;
 
-    std::random_device rd;
-    std::mt19937 mt;
+    std::mt19937 m_generator;
     std::uniform_real_distribution<float> dist;
 
     float get_random_float() {
-        return dist(mt);
+        return dist(m_generator);
     }
 
     int get_random_int(int min, int max) {
-        std::uniform_int_distribution uid(min, max);
-        return uid(mt);
+        std::uniform_int_distribution<> uid(min, max);
+        return uid(m_generator);
     }
 
     void attack(DmsCharacter* attacker, DmsCharacter*defender);
     int getEnemy(std::vector<DmsEnemy*> enemies);
 };
 
-template<>
-inline void Interpreter::run(DmsScenario *scenario){
+void Interpreter::run_scenario(DmsScenario *scenario){
     std::cout << "Running scenario: " << scenario->field_scope.get_field<std::string>("name")->get_value() << std::endl;
     auto encounter_cloners = scenario->getEncounters();
-    for (int i = 0; i < encounter_cloners.size(); ++i) {
-        for (int j = 0; j < encounter_cloners[i]->get_amount(); ++j) {
-            DmsEncounter a = *encounter_cloners[i]->get_clone();
+    for(auto encounter_cloner : encounter_cloners) {
+        for (int j = 0; j < encounter_cloner->get_amount(); ++j) {
+            DmsEncounter *a = encounter_cloner->get_clone();
+            run_encounter(a);
         }
     }
 }
 
-template<>
-inline void Interpreter::run(DmsEncounter *encounter){
+void Interpreter::run_encounter(DmsEncounter *encounter){
     std::cout << "Running encounter: " << encounter->field_scope.get_field<std::string>("name")->get_value() << std::endl;
 
     auto enemy_cloners = encounter->getSpawners();
@@ -152,7 +150,12 @@ inline void Interpreter::run(DmsEncounter *encounter){
                 }
             }
         }
+
+        // TODO - Give good cout for game state
+
     }
+
+    
 
     // clear memorry
     for (auto enemy : enemies) {
@@ -164,8 +167,6 @@ inline void Interpreter::run(DmsEncounter *encounter){
         std::cout << "Game over" << std::endl;
     }   
 }
-
-
 
 void Interpreter::attack(DmsCharacter *attacker, DmsCharacter *defender) {
     float hit_roll = get_random_float();
