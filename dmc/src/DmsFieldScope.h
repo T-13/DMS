@@ -10,6 +10,7 @@ class DmsObject;
 class DmsFieldScope {
 public:
     DmsFieldScope();
+    DmsFieldScope(const DmsFieldScope &original);
     ~DmsFieldScope();
 
     void set_enclosing_scope(DmsFieldScope *enclosing_scope);
@@ -24,7 +25,7 @@ public:
 
     std::vector<std::string> get_all_field_names();
     template<typename T>
-    std::vector<DmsField<T>> get_all_fields(); // Use with eg. get_all_fields<int>()
+    std::vector<DmsField<T>> get_all_fields() const; // Use with eg. get_all_fields<int>()
 
     std::string serialize();
 
@@ -71,7 +72,7 @@ inline DmsField<DmsSerializable*> *DmsFieldScope::get_field(std::string name) {
 }
 
 template<>
-inline std::vector<DmsField<float>> DmsFieldScope::get_all_fields() {
+inline std::vector<DmsField<float>> DmsFieldScope::get_all_fields() const{
     std::vector<DmsField<float>> values;
 
     for (auto &field : float_fields) {
@@ -82,7 +83,7 @@ inline std::vector<DmsField<float>> DmsFieldScope::get_all_fields() {
 }
 
 template<>
-inline std::vector<DmsField<std::string>> DmsFieldScope::get_all_fields() {
+inline std::vector<DmsField<std::string>> DmsFieldScope::get_all_fields() const{
     std::vector<DmsField<std::string>> values;
 
     for (auto &field : string_fields) {
@@ -93,7 +94,7 @@ inline std::vector<DmsField<std::string>> DmsFieldScope::get_all_fields() {
 }
 
 template<>
-inline std::vector<DmsField<DmsSerializable*>> DmsFieldScope::get_all_fields() {
+inline std::vector<DmsField<DmsSerializable*>> DmsFieldScope::get_all_fields() const{
     std::vector<DmsField<DmsSerializable*>> values;
 
     for (auto &field : object_fields) {

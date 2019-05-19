@@ -19,6 +19,7 @@ template<class T>
 class DmsField {
 public:
     DmsField();
+    DmsField(const DmsField<T>& dms_field);
     DmsField(std::string name_, T value_, bool is_resolved_);
     ~DmsField();
 
@@ -26,8 +27,6 @@ public:
     bool get_is_resolved() const;
     void set_value(T value_, bool is_resolved_);
     std::string get_name() const;
-
-    bool is_being_resolved = false;
 
     std::string serialize();
 
@@ -44,6 +43,11 @@ DmsField<T>::DmsField() {
 template<class T>
 DmsField<T>::DmsField(std::string name_, T value_, bool is_resolved_)
         : name(name_), value(value_), is_resolved(is_resolved_) {
+}
+
+template<class T>
+DmsField<T>::DmsField(const DmsField<T>& dms_field)
+        : name(dms_field.name), value(dms_field.value), is_resolved(dms_field.is_resolved) {
 }
 
 template<class T>

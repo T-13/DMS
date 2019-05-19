@@ -42,9 +42,11 @@ private:
     T resolve(DmsField<T> field);
 };
 
+
 template<>
 inline std::string Resolver::resolve(DmsField<std::string> field) {
-    if (field.is_being_resolved) {
+    /*if (field.is_being_resolved) {
         throw new ResolveException(field.get_name(), ResolveException::CircularVariableDependency);
-    }
+    }*/
+    return "a";
 }

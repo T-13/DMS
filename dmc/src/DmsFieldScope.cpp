@@ -4,6 +4,20 @@ DmsFieldScope::DmsFieldScope()
         : enclosing_scope(nullptr) {
 }
 
+DmsFieldScope::DmsFieldScope(const DmsFieldScope &original)
+        : enclosing_scope(original.enclosing_scope) {
+            
+            for(auto field : original.get_all_fields<float>()) {
+                set_field_value(field.get_name(), field.get_value(), field.get_is_resolved());
+            }
+            for(auto field : original.get_all_fields<std::string>()) {
+                set_field_value(field.get_name(), field.get_value(), field.get_is_resolved());
+            }
+            for(auto field : original.get_all_fields<DmsSerializable*>()) {
+                set_field_value(field.get_name(), field.get_value(), field.get_is_resolved());
+            }
+}
+
 DmsFieldScope::~DmsFieldScope() {
 }
 
