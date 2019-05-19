@@ -9,7 +9,7 @@ DmsEncounter::DmsEncounter() {
 }
 
 DmsEncounter::DmsEncounter(const DmsEncounter &encounter)
-        : DmsObject(encounter.field_scope.get_enclosing_scope()) {
+        : DmsObject(encounter) {
     // Delete
     for(auto enemies_cloner : enemies){
         delete enemies_cloner;
@@ -45,8 +45,9 @@ void DmsEncounter::addSpawner(DmsEnemy *enemy, int amount) {
 
 std::string DmsEncounter::serialize() {
     std::string result = "\n";
-    for (auto dupe : enemies){
-        result += dupe->get_clone()->serialize() + "  amount: " + std::to_string(dupe->get_amount()) + "\n";
+    auto float_fields = field_scope.get_all_fields<float>();
+    for (auto dupe : float_fields) {
+        result += dupe.get_name() + " -> amount: " + std::to_string(int(dupe.get_value())) + "\n";
     }
     return result;
 }

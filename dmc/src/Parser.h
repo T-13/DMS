@@ -252,6 +252,8 @@ protected:
                 return Error;
             }
 
+            current->field_scope.set_field_value("name", token.lexem(), true);
+
             std::string lexem = token.lexem();
             token = scanner.next_token();
             if (token.lexem() == "has") {
@@ -332,7 +334,7 @@ protected:
                 return Error;
             }
             DmsEncounter *encounter = static_cast<DmsEncounter*>(field->get_value());
-
+           
             static_cast<DmsScenario*>(current)->addEncounter(encounter, 1);
         }
 

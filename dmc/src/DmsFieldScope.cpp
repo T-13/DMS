@@ -80,7 +80,7 @@ std::vector<std::string> DmsFieldScope::get_all_field_names() {
 }
 
 std::string DmsFieldScope::serialize() {
-    std::string result = "";
+    std::string result = "\n";
 
     for (auto &field : float_fields) {
         result += field.second.serialize();
