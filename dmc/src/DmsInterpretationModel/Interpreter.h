@@ -17,13 +17,16 @@
 class RuntimeException: public std::exception {
 public:
     enum State {
+        GameOver,
         UnknownError,
     };
 
     RuntimeException(std::string msg, int type) {
         if (type == UnknownError) {
             m_msg = "UnknownError{\n" + msg + "\n}\n";
-        } else {
+        } else if (type == GameOver) {
+            m_msg = "Game Over <=> All players are dead! \n";
+        }else {
             m_msg = "Error{\n" + msg + "\n}\n";
         }
     }
@@ -75,6 +78,9 @@ private:
         std::uniform_int_distribution uid(min, max);
         return uid(mt);
     }
+
+    void attack(DmsCharacter* attacker, DmsCharacter*defender);
+    int getEnemy(std::vector<DmsEnemy*> enemies);
 };
 
 template<>
@@ -119,13 +125,78 @@ inline void Interpreter::run(DmsEncounter *encounter){
 
     // Run Dmg simulation
     while(!enemies.empty() && !players.empty()) {
+        for(auto character : characters){
+            // Only if character is alive
+            if (character->field_scope.get_field<float>("hp")->get_value() > 0.0f) {
+                // Enemy is attacking
+                if (typeid(character) == typeid(DmsEnemy*)) {
+                    int target = get_random_int(0, players.size()-1);
+                    DmsPlayer *defender = players.at(target);
+                    attack(character, defender);
+
+                    if (defender->field_scope.get_field<float>("hp")->get_value() <= 0){
+                        std::cout << defender->field_scope.get_field<std::string>("name")->get_value() << " has died!" << std::endl;
+                        players.erase(players.begin() + target);
+                    }
+
+                // Player is attacking
+                } else {
+                    int target = getEnemy(enemies);
+                    DmsEnemy *defender = enemies.at(target);
+                    attack(character, defender);
+
+                    if (defender->field_scope.get_field<float>("hp")->get_value() <= 0){
+                        std::cout << defender->field_scope.get_field<std::string>("name")->get_value() << " has died!" << std::endl;
+                        enemies.erase(enemies.begin() + target);
+                    }
+                }
+            }
+        }
     }
 
     // clear memorry
     for (auto enemy : enemies) {
         delete enemy;
+        throw new RuntimeException("DIE!!!!", RuntimeException::State::GameOver);
+    }
+
+    if (players.empty()) {
+        std::cout << "Game over" << std::endl;
+    }   
+}
+
+
+
+void Interpreter::attack(DmsCharacter *attacker, DmsCharacter *defender) {
+    float hit_roll = get_random_float();
+    // Attacker hit defender
+    if (hit_roll < attacker->field_scope.get_field<float>("hit_chance")->get_value()) {
+        float dmg = attacker->field_scope.get_field<float>("dmg")->get_value();
+        auto hp = defender->field_scope.get_field<float>("hp");
+
+        std::cout << attacker->field_scope.get_field<std::string>("name")->get_value() << " has hit " << defender->field_scope.get_field<std::string>("name")->get_value();
+        std::cout << " for " << dmg << " damage" << std::endl;
+        std::cout << defender->field_scope.get_field<std::string>("name")->get_value() << "'s hp went from " << hp->get_value() << " to ";
+        // Set new hp value
+        hp->set_value(hp->get_value() - dmg, true);
+        std::cout << hp->get_value() << std:: endl;
+    } else {
+        std::cout << attacker->field_scope.get_field<std::string>("name")->get_value() << " has missed " << defender->field_scope.get_field<std::string>("name")->get_value() << std::endl;
     }
 }
 
+int Interpreter::getEnemy(std::vector<DmsEnemy*> enemies) {
+    int i = 1;
+    std::cout << "Enemies: " << std::endl;
+    for(auto enemy : enemies) {
+        std::cout << "[" << i++ << "] " << enemy->serialize() << std::endl; 
+    }
+
+    int result;
+    std::cout << "Choose which enemy to attack: ";
+    std::cin >> result;
+    
+    return result - 1;
+}
 
 

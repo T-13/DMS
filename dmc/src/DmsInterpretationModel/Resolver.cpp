@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "../DmsSerializable.h"
+#include "Interpreter.h"
 
 Resolver::Resolver(DmsGame *game_) {
     game = game_;
@@ -44,5 +45,16 @@ void Resolver::resolve() {
 
     std::cout << "-> [Valid] Encounters" << std::endl;
     std::cout << std::endl << "Serializing ... " << game->serialize();
-    std::cout << "Running ... TODO" << std::endl;
+    std::cout << "Running ... " << std::endl;
+
+    Interpreter interpreter;
+    try
+    {
+        interpreter.run(game);
+
+    } catch(const std::exception& e) {
+        std::cerr << e.what() << '\n';
+        return;
+    }
+    std::cout << "Game finished! Congratulations" << std::endl;   
 }
