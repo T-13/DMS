@@ -112,29 +112,33 @@ void Interpreter::run_encounter(DmsEncounter *encounter){
 
     // Put players in vector
     for (auto player : current_game->players->field_scope.get_all_fields<DmsSerializable*>()) {
-        players.push_back((DmsPlayer*)player.get_value());
-        characters.push_back((DmsCharacter*)player.get_value());
+        if (((DmsPlayer*)player.get_value())->field_scope.get_field<float>("hp")->get_value() > 0) {
+            players.push_back((DmsPlayer*)player.get_value());
+            characters.push_back((DmsCharacter*)player.get_value());
+        }
     }
     
     // sort DmsCharacters acording to speed using a lambda expression
     std::sort(characters.begin(), characters.end(), [](DmsCharacter* a, DmsCharacter* b) {
-        return a->field_scope.get_field<float>("speed") > b->field_scope.get_field<float>("speed");   
+        return a->field_scope.get_field<float>("speed") < b->field_scope.get_field<float>("speed");   
     });
 
     // Run Dmg simulation
     while(!enemies.empty() && !players.empty()) {
         for(auto character : characters){
+            // std::cout << "Players alive: " << players.size() << std::endl;
+
             // Only if character is alive
             if (character->field_scope.get_field<float>("hp")->get_value() > 0.0f) {
                 // Enemy is attacking
-                if (typeid(character) == typeid(DmsEnemy*)) {
+                if (std::find(players.begin(), players.end(), character) == players.end()) {
                     int target = get_random_int(0, players.size()-1);
                     DmsPlayer *defender = players.at(target);
                     attack(character, defender);
 
                     if (defender->field_scope.get_field<float>("hp")->get_value() <= 0){
-                        std::cout << defender->field_scope.get_field<std::string>("name")->get_value() << " has died!" << std::endl;
                         players.erase(players.begin() + target);
+                        std::cout << defender->field_scope.get_field<std::string>("name")->get_value() << " has died!" << std::endl;
                     }
 
                 // Player is attacking
@@ -149,22 +153,25 @@ void Interpreter::run_encounter(DmsEncounter *encounter){
                     }
                 }
             }
+            
+            if(enemies.empty() || players.empty()) {
+                std::cout << "Encounter finished" << std::endl;
+                break;
+            }
         }
 
-        // TODO - Give good cout for game state
-
+        // TODO - Give good cout for game states - general cout improvements - more information - etc.
+        // TODO improve couts overall !!!
     }
-
-    
 
     // clear memorry
     for (auto enemy : enemies) {
         delete enemy;
-        throw new RuntimeException("DIE!!!!", RuntimeException::State::GameOver);
     }
 
     if (players.empty()) {
         std::cout << "Game over" << std::endl;
+        throw new RuntimeException("DIE!!!!", RuntimeException::State::GameOver);
     }   
 }
 

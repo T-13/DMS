@@ -14,7 +14,7 @@ void Resolver::resolve() {
     std::cout << std::endl << "Resolving ..." << std::endl;
 
     for (auto player : game->players->field_scope.get_all_fields<DmsSerializable*>()) {
-        if (static_cast<DmsEnemy*>(player.get_value())->verify()) {
+        if (!static_cast<DmsEnemy*>(player.get_value())->verify()) {
             std::cout << "-> [Invalid] Player:" << player.get_name() << std::endl;
         } else {
             std::cout << "-> [Valid] Player: " << player.get_name() << std::endl;
@@ -22,7 +22,7 @@ void Resolver::resolve() {
     }
 
     for (auto enemy : game->enemies->field_scope.get_all_fields<DmsSerializable*>()) {
-        if (static_cast<DmsEnemy*>(enemy.get_value())->verify()) {
+        if (!static_cast<DmsEnemy*>(enemy.get_value())->verify()) {
             std::cout << "-> [Invalid] Enemy" << enemy.get_name() << std::endl;
         } else {
             std::cout << "-> [Valid] Enemy: " << enemy.get_name() << std::endl;
@@ -55,7 +55,7 @@ void Resolver::resolve() {
     } catch(const std::exception& e) {
         std::cerr << e.what() << '\n';
         return;
-    }
+    }   // TODO - exit in a nice way!
     std::cout << "Game finished! Congratulations" << std::endl;
 
     // TODO - general cleanup - check for memory leaks - everywhere!!!
