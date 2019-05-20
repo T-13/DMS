@@ -334,7 +334,7 @@ protected:
                 return Error;
             }
             DmsEncounter *encounter = static_cast<DmsEncounter*>(field->get_value());
-           
+
             static_cast<DmsScenario*>(current)->addEncounter(encounter, 1);
         }
 

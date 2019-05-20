@@ -12,11 +12,10 @@ DmsCharacter::DmsCharacter(DmsFieldScope *enclosing_scope)
 }
 
 bool DmsCharacter::verify() {
-
-    if(field_scope.get_field<float>("hit_chance") != nullptr) {
-        if(field_scope.get_field<float>("hit_chance")->get_value() > 1.0) {
+    if (field_scope.get_field<float>("hit_chance") != nullptr) {
+        if (field_scope.get_field<float>("hit_chance")->get_value() > 1.0) {
             field_scope.set_field_value("hit_chance", 1.0, true);
-        } else if(field_scope.get_field<float>("hit_chance")->get_value() < 0.0) {
+        } else if (field_scope.get_field<float>("hit_chance")->get_value() < 0.0) {
             field_scope.set_field_value("hit_chance", 0.01, true);
         }
     }

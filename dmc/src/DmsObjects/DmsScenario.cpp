@@ -9,16 +9,18 @@ DmsScenario::DmsScenario() {
 
 DmsScenario::DmsScenario(const DmsScenario &scenario)
         : DmsObject(scenario) {
-            // Delete
-            for(auto encounter_cloner : encounters){
-                delete encounter_cloner;
-            }
-            // Clear vecotr
-            encounters.clear();
-            // Fill with original's cloner's clones
-            for(auto encounter_cloner : scenario.encounters) {
-                encounters.push_back(new DmsDuplicator<DmsEncounter>(*encounter_cloner));
-            }
+    // Delete
+    for (auto &encounter_cloner : encounters){
+        delete encounter_cloner;
+    }
+
+    // Clear vector
+    encounters.clear();
+
+    // Fill with original's cloner's clones
+    for (auto &encounter_cloner : scenario.encounters) {
+        encounters.push_back(new DmsDuplicator<DmsEncounter>(*encounter_cloner));
+    }
 }
 
 DmsScenario::DmsScenario(DmsFieldScope *enclosing_scope)
@@ -50,7 +52,7 @@ void DmsScenario::addEncounter(DmsEncounter *encounter, int amount) {
 
 std::string DmsScenario::serialize() {
     std::string result = "\n";
-    for (auto dupe : encounters) {
+    for (auto &dupe : encounters) {
         result += dupe->get_clone()->field_scope.get_field<std::string>("name")->get_value() + " -> amount: " + std::to_string(dupe->get_amount()) + "\n";
     }
     return result;

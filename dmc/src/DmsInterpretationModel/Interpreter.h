@@ -26,7 +26,7 @@ public:
             m_msg = "UnknownError{\n" + msg + "\n}\n";
         } else if (type == GameOver) {
             m_msg = "Game Over <=> All players are dead! \n";
-        }else {
+        } else {
             m_msg = "Error{\n" + msg + "\n}\n";
         }
     }
@@ -50,14 +50,14 @@ public:
             current_game = game;
             // Start current game
             run_scenario(game->starting_scenario);
-        } catch (std::exception e) {
+        } catch (const std::exception &e) {
             if (typeid(e) != typeid(RuntimeException)) {
                 throw new RuntimeException(e.what(), RuntimeException::State::UnknownError);
             } else {
                 throw e;
             }
         }
-        
+
     };
 
 private:
@@ -78,14 +78,14 @@ private:
         return uid(m_generator);
     }
 
-    void attack(DmsCharacter* attacker, DmsCharacter*defender);
-    int getEnemy(std::vector<DmsEnemy*> enemies);
+    void attack(DmsCharacter * attacker, DmsCharacter *defender);
+    int get_enemy(std::vector<DmsEnemy*> enemies);
 };
 
 void Interpreter::run_scenario(DmsScenario *scenario){
     std::cout << "Running scenario: " << scenario->field_scope.get_field<std::string>("name")->get_value() << std::endl;
     auto encounter_cloners = scenario->getEncounters();
-    for(auto encounter_cloner : encounter_cloners) {
+    for (auto &encounter_cloner : encounter_cloners) {
         for (int j = 0; j < encounter_cloner->get_amount(); ++j) {
             DmsEncounter *a = encounter_cloner->get_clone();
             run_encounter(a);
@@ -102,7 +102,7 @@ void Interpreter::run_encounter(DmsEncounter *encounter){
     std::vector<DmsCharacter*> characters;
 
     // Spawn correct amount of correct enemy
-    for (auto enemy_cloner : enemy_cloners) {
+    for (auto &enemy_cloner : enemy_cloners) {
         for (int i = 0; i < enemy_cloner->get_amount(); ++i) {
             DmsEnemy *enemy = enemy_cloner->get_clone();
             enemies.push_back(enemy);
@@ -112,27 +112,27 @@ void Interpreter::run_encounter(DmsEncounter *encounter){
 
     // Put players in vector
     for (auto player : current_game->players->field_scope.get_all_fields<DmsSerializable*>()) {
-        if (((DmsPlayer*)player.get_value())->field_scope.get_field<float>("hp")->get_value() > 0) {
-            players.push_back((DmsPlayer*)player.get_value());
-            characters.push_back((DmsCharacter*)player.get_value());
+        if (static_cast<DmsPlayer*>(player.get_value())->field_scope.get_field<float>("hp")->get_value() > 0) {
+            players.push_back(static_cast<DmsPlayer*>(player.get_value()));
+            characters.push_back(static_cast<DmsCharacter*>(player.get_value()));
         }
     }
-    
-    // sort DmsCharacters acording to speed using a lambda expression
+
+    // Sort DmsCharacters acording to speed using a lambda expression
     std::sort(characters.begin(), characters.end(), [](DmsCharacter* a, DmsCharacter* b) {
-        return a->field_scope.get_field<float>("speed") < b->field_scope.get_field<float>("speed");   
+        return a->field_scope.get_field<float>("speed") < b->field_scope.get_field<float>("speed");
     });
 
-    // Run Dmg simulation
-    while(!enemies.empty() && !players.empty()) {
-        for(auto character : characters){
+    // Run damage simulation
+    while (!enemies.empty() && !players.empty()) {
+        for (auto &character : characters){
             // std::cout << "Players alive: " << players.size() << std::endl;
 
             // Only if character is alive
             if (character->field_scope.get_field<float>("hp")->get_value() > 0.0f) {
-                // Enemy is attacking
                 if (std::find(players.begin(), players.end(), character) == players.end()) {
-                    int target = get_random_int(0, players.size()-1);
+                    // Enemy is attacking
+                    int target = get_random_int(0, players.size() - 1);
                     DmsPlayer *defender = players.at(target);
                     attack(character, defender);
 
@@ -140,10 +140,9 @@ void Interpreter::run_encounter(DmsEncounter *encounter){
                         players.erase(players.begin() + target);
                         std::cout << defender->field_scope.get_field<std::string>("name")->get_value() << " has died!" << std::endl;
                     }
-
-                // Player is attacking
                 } else {
-                    int target = getEnemy(enemies);
+                    // Player is attacking
+                    int target = get_enemy(enemies);
                     DmsEnemy *defender = enemies.at(target);
                     attack(character, defender);
 
@@ -153,8 +152,8 @@ void Interpreter::run_encounter(DmsEncounter *encounter){
                     }
                 }
             }
-            
-            if(enemies.empty() || players.empty()) {
+
+            if (enemies.empty() || players.empty()) {
                 std::cout << "Encounter finished" << std::endl;
                 break;
             }
@@ -164,15 +163,15 @@ void Interpreter::run_encounter(DmsEncounter *encounter){
         // TODO improve couts overall !!!
     }
 
-    // clear memorry
-    for (auto enemy : enemies) {
+    // Clear memorry
+    for (auto &enemy : enemies) {
         delete enemy;
     }
 
     if (players.empty()) {
         std::cout << "Game over" << std::endl;
         throw new RuntimeException("DIE!!!!", RuntimeException::State::GameOver);
-    }   
+    }
 }
 
 void Interpreter::attack(DmsCharacter *attacker, DmsCharacter *defender) {
@@ -193,17 +192,16 @@ void Interpreter::attack(DmsCharacter *attacker, DmsCharacter *defender) {
     }
 }
 
-int Interpreter::getEnemy(std::vector<DmsEnemy*> enemies) {
-    int i = 1;
+int Interpreter::get_enemy(std::vector<DmsEnemy*> enemies) {
     std::cout << "Enemies: " << std::endl;
-    for(auto enemy : enemies) {
-        std::cout << "[" << i++ << "] " << enemy->serialize() << std::endl; 
+    for (auto it = enemies.begin(); it != enemies.end(); ++it) {
+        std::cout << "[" << std::distance(enemies.begin(), it) << "] " << (*it)->serialize() << std::endl;
     }
 
     int result;
     std::cout << "Choose which enemy to attack: ";
     std::cin >> result;
-    
+
     return result - 1;
 }
 

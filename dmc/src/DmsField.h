@@ -19,7 +19,7 @@ template<class T>
 class DmsField {
 public:
     DmsField();
-    DmsField(const DmsField<T>& dms_field);
+    DmsField(const DmsField<T> &dms_field);
     DmsField(std::string name_, T value_, bool is_resolved_);
     ~DmsField();
 
@@ -46,7 +46,7 @@ DmsField<T>::DmsField(std::string name_, T value_, bool is_resolved_)
 }
 
 template<class T>
-DmsField<T>::DmsField(const DmsField<T>& dms_field)
+DmsField<T>::DmsField(const DmsField<T> &dms_field)
         : name(dms_field.name), value(dms_field.value), is_resolved(dms_field.is_resolved) {
 }
 
