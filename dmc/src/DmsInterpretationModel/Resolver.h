@@ -14,9 +14,9 @@ public:
 
     ResolveException(std::string variable, int type) {
         if (type == VariableUndefined) {
-            m_msg = "Error{\nVariable: " + variable + " not defined in this scope\n}\n";
+            m_msg = "Error{\nVariable: " + variable + " not defined in this scope\n}";
         } else if (type == CircularVariableDependency) {
-            m_msg = "Error{\nVariable" + variable + " cannot be resolved <=> Circular variable dependancy\n}\n";
+            m_msg = "Error{\nVariable" + variable + " cannot be resolved <=> Circular variable dependancy\n}";
         }
     }
 

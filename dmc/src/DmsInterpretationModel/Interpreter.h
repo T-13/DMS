@@ -23,11 +23,11 @@ public:
 
     RuntimeException(std::string msg, int type) {
         if (type == UnknownError) {
-            m_msg = "UnknownError{\n" + msg + "\n}\n";
+            m_msg = "UnknownError{\n" + msg + "\n}";
         } else if (type == GameOver) {
-            m_msg = "Game Over <=> All players are dead! \n";
+            m_msg = "Game Over! All players are dead!";
         } else {
-            m_msg = "Error{\n" + msg + "\n}\n";
+            m_msg = "Error{\n" + msg + "\n}";
         }
     }
 
@@ -54,11 +54,10 @@ public:
             if (typeid(e) != typeid(RuntimeException)) {
                 throw RuntimeException(e.what(), RuntimeException::State::UnknownError);
             } else {
-                throw e;
+                throw;
             }
         }
-
-    };
+    }
 
 private:
     void run_scenario(DmsScenario *scenario);
@@ -163,7 +162,6 @@ void Interpreter::run_encounter(DmsEncounter *encounter){
         // TODO improve couts overall !!!
     }
     if (players.empty()) {
-        std::cout << "Game over" << std::endl;
         throw RuntimeException("DIE!!!!", RuntimeException::State::GameOver);
     }
 }

@@ -48,13 +48,17 @@ void Resolver::resolve() {
     std::cout << "Running ... " << std::endl;
 
     Interpreter interpreter;
+    bool exception = false;
     try {
         interpreter.run(game);
     } catch (const std::exception &e) {
-        // Catch actual exceptions properly
+        std::cerr << e.what() << std::endl;
+        exception = true;
     }
 
-    std::cout << "Game finished! Congratulations" << std::endl;
+    if (!exception) {
+        std::cout << "Game finished! Congratulations" << std::endl;
+    }
 
     // TODO - give DmsObject getField, GetFieldValue and GetFieldName that wraps FieldScope and replace long spaghetis with nicer calls to this function
     // Like wtf is this: game->enemies->field_scope.get_field<DmsSerializable*>(. . . ) xD
