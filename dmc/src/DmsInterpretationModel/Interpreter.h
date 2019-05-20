@@ -52,7 +52,7 @@ public:
             run_scenario(game->starting_scenario);
         } catch (const std::exception &e) {
             if (typeid(e) != typeid(RuntimeException)) {
-                throw new RuntimeException(e.what(), RuntimeException::State::UnknownError);
+                throw RuntimeException(e.what(), RuntimeException::State::UnknownError);
             } else {
                 throw e;
             }
@@ -162,10 +162,9 @@ void Interpreter::run_encounter(DmsEncounter *encounter){
         // TODO - Give good cout for game states - general cout improvements - more information - etc.
         // TODO improve couts overall !!!
     }
-
     if (players.empty()) {
         std::cout << "Game over" << std::endl;
-        throw new RuntimeException("DIE!!!!", RuntimeException::State::GameOver);
+        throw RuntimeException("DIE!!!!", RuntimeException::State::GameOver);
     }
 }
 

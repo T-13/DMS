@@ -37,7 +37,7 @@ void Resolver::resolve() {
         for (auto &enemy_field : encounter->field_scope.get_all_fields<float>()) {
             auto enemy = game->enemies->field_scope.get_field<DmsSerializable*>(enemy_field.get_name());
             if (enemy == nullptr) {
-                throw new ResolveException(enemy_field.get_name(), ResolveException::VariableUndefined);
+                throw ResolveException(enemy_field.get_name(), ResolveException::VariableUndefined);
             }
             encounter->addSpawner(static_cast<DmsEnemy*>(enemy->get_value()), enemy_field.get_value());
         }
@@ -51,7 +51,6 @@ void Resolver::resolve() {
     try {
         interpreter.run(game);
     } catch (const std::exception &e) {
-        std::cerr << e.what() << '\n';
         return;
     }   // TODO - exit in a nice way!
 
