@@ -10,6 +10,7 @@ public:
     DmsEncounter();
     DmsEncounter(const DmsEncounter &encounter);
     DmsEncounter(DmsFieldScope *enclosing_scope);
+    ~DmsEncounter();
 
     bool verify();
     void addSpawner(DmsEnemy *enemy, int amount);

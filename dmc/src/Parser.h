@@ -16,6 +16,13 @@ public:
             : scanner(input), result(Ok) {
     }
 
+    ~Parser() {
+        for (auto &object : objects) {
+            delete object;
+        }
+        delete game;
+    }
+
     bool parse() {
         token = scanner.next_token();
         result = DUNGEON(); // Call top grammar procedure
@@ -39,6 +46,11 @@ public:
 
     bool error() {
         return result == Error;
+    }
+
+    void set_current(DmsObject *object) {
+        objects.push_back(object);
+        current = object;
     }
 
     DmsGame *game = new DmsGame();
@@ -132,7 +144,7 @@ protected:
             std::string object_name = token.lexem();
 
             DmsObject *playersScope = current;
-            current = new DmsPlayer();
+            set_current(new DmsPlayer());
 
             token = scanner.next_token();
             if (!STATS()) return Error;
@@ -164,7 +176,7 @@ protected:
             std::string object_name = token.lexem();
 
             DmsObject *enemyScope = current;
-            current = new DmsEnemy();
+            set_current(new DmsEnemy());
 
             token = scanner.next_token();
             if (!STATS()) return Error;
@@ -244,10 +256,10 @@ protected:
             current = nullptr;
             bool isEncounter = false;
             if (scope == game->encounters) {
-                current = new DmsEncounter();
+                set_current(new DmsEncounter());
                 isEncounter = true;
             } else if (scope == game->scenarios) {
-                current = new DmsScenario();
+                set_current(new DmsScenario());
             } else {
                 return Error;
             }
@@ -449,6 +461,7 @@ protected:
     }
 
 private:
+    // Parser
     enum Result : bool {
         Ok = true,
         Error = false
@@ -458,8 +471,11 @@ private:
     Token token;
     bool result;
 
+    // Evaluator
     DmsObject *current;
     DmsObject *scope;
+
+    std::vector<DmsObject*> objects; // Memory management
 };
 
 // TODO - better error explenation? Something or something expected?

@@ -11,7 +11,7 @@ DmsEncounter::DmsEncounter() {
 DmsEncounter::DmsEncounter(const DmsEncounter &encounter)
         : DmsObject(encounter) {
     // Delete
-    for (auto &enemies_cloner : enemies){
+    for (auto &enemies_cloner : enemies) {
         delete enemies_cloner;
     }
 
@@ -26,6 +26,12 @@ DmsEncounter::DmsEncounter(const DmsEncounter &encounter)
 
 DmsEncounter::DmsEncounter(DmsFieldScope *enclosing_scope)
         : DmsObject(enclosing_scope) {
+}
+
+DmsEncounter::~DmsEncounter() {
+    for (auto &enemy : enemies) {
+        delete enemy;
+    }
 }
 
 bool DmsEncounter::verify() {
