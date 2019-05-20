@@ -111,7 +111,7 @@ void Interpreter::run_encounter(DmsEncounter *encounter){
     }
 
     // Put players in vector
-    for (auto player : current_game->players->field_scope.get_all_fields<DmsSerializable*>()) {
+    for (auto &player : current_game->players->field_scope.get_all_fields<DmsSerializable*>()) {
         if (static_cast<DmsPlayer*>(player.get_value())->field_scope.get_field<float>("hp")->get_value() > 0) {
             players.push_back(static_cast<DmsPlayer*>(player.get_value()));
             characters.push_back(static_cast<DmsCharacter*>(player.get_value()));
@@ -119,7 +119,7 @@ void Interpreter::run_encounter(DmsEncounter *encounter){
     }
 
     // Sort DmsCharacters acording to speed using a lambda expression
-    std::sort(characters.begin(), characters.end(), [](DmsCharacter* a, DmsCharacter* b) {
+    std::sort(characters.begin(), characters.end(), [](DmsCharacter *a, DmsCharacter *b) {
         return a->field_scope.get_field<float>("speed") < b->field_scope.get_field<float>("speed");
     });
 
@@ -161,11 +161,6 @@ void Interpreter::run_encounter(DmsEncounter *encounter){
 
         // TODO - Give good cout for game states - general cout improvements - more information - etc.
         // TODO improve couts overall !!!
-    }
-
-    // Clear memorry
-    for (auto &enemy : enemies) {
-        delete enemy;
     }
 
     if (players.empty()) {
