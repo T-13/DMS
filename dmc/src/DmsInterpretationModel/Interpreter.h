@@ -187,7 +187,7 @@ void Interpreter::attack(DmsCharacter *attacker, DmsCharacter *defender) {
 int Interpreter::get_enemy(std::vector<DmsEnemy*> enemies) {
     std::cout << "Enemies: " << std::endl;
     for (auto it = enemies.begin(); it != enemies.end(); ++it) {
-        std::cout << "[" << std::distance(enemies.begin(), it) << "] " << (*it)->serialize() << std::endl;
+        std::cout << "[" << std::distance(enemies.begin(), it) + 1 << "] " << (*it)->serialize() << std::endl;
     }
 
     int result;
