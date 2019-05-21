@@ -190,9 +190,13 @@ int Interpreter::get_enemy(std::vector<DmsEnemy*> enemies) {
         std::cout << "[" << std::distance(enemies.begin(), it) + 1 << "] " << (*it)->serialize() << std::endl;
     }
 
-    int result;
+    uint32_t result;
     std::cout << "Choose which enemy to attack: ";
-    std::cin >> result;
+    while (!(std::cin >> result) || result < 1 || result > enemies.size()) {
+        std::cout << "Invalid enemy! New: ";
+        std::cin.clear();
+        std::cin.ignore();
+    }
 
     return result - 1;
 }
