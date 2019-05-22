@@ -1,6 +1,6 @@
 # DMS
 
-[![Travis CI](https://travis-ci.com/jonpas/DMS.svg?token=2QJyszxBKDHVJDk5Ky3q&branch=master)](https://travis-ci.com/jonpas/DMS)
+[![Travis CI](https://travis-ci.com/T-13/DMS.svg?branch=master)](https://travis-ci.com/T-13/DMS)
 
 Dungeon Master Script compiler and development environment.
 
