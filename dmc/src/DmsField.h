@@ -28,7 +28,7 @@ public:
     void set_value(T value_, bool is_resolved_);
     std::string get_name() const;
 
-    std::string serialize();
+    std::string serialize(bool split = false);
 
 protected:
     std::string name;
@@ -76,17 +76,28 @@ std::string DmsField<T>::get_name() const {
 }
 
 template<class T>
-std::string DmsField<T>::serialize() {
-    return name + " -> " + std::to_string(value) + "\n";
+std::string DmsField<T>::serialize(bool split) {
+    std::string s;
+    if (split) s += "-> ";
+    s += name + ": " + std::to_string(value);
+    if (split) s += "\n";
+    return s;
 }
 
 // inline to avoid multiple definitions (function without arguments)
 template<>
-inline std::string DmsField<std::string>::serialize() {
-    return name + " -> " + value + "\n";
+inline std::string DmsField<std::string>::serialize(bool split) {
+    std::string s;
+    if (split) s += "-> ";
+    s += name + ": " + value;
+    if (split) s += "\n";
+    return s;
 }
 
 template<>
-inline std::string DmsField<DmsSerializable*>::serialize() {
-    return name + " -> " + value->serialize() + "\n";
+inline std::string DmsField<DmsSerializable*>::serialize(bool split) {
+    std::string s;
+    s += "\n-> " + name + " =>" + value->serialize(split);
+    if (split) s += "\n";
+    return s;
 }

@@ -5,6 +5,7 @@
 #include <iostream>
 #include <algorithm>
 #include <random>
+#include <limits>
 
 #include "../DmsGame.h"
 #include "../DmsObjects/DmsDuplicator.h"
@@ -79,10 +80,13 @@ private:
 
     void attack(DmsCharacter * attacker, DmsCharacter *defender);
     int get_enemy(std::vector<DmsEnemy*> enemies);
+
+    void print_clear();
+    void print_log();
 };
 
 void Interpreter::run_scenario(DmsScenario *scenario){
-    std::cout << "Running scenario: " << scenario->field_scope.get_field<std::string>("name")->get_value() << std::endl;
+    std::cout << std::endl << "SCENARIO: " << scenario->field_scope.get_field<std::string>("name")->get_value() << std::endl;
     auto encounter_cloners = scenario->getEncounters();
     for (auto &encounter_cloner : encounter_cloners) {
         for (int j = 0; j < encounter_cloner->get_amount(); ++j) {
@@ -93,7 +97,12 @@ void Interpreter::run_scenario(DmsScenario *scenario){
 }
 
 void Interpreter::run_encounter(DmsEncounter *encounter){
-    std::cout << "Running encounter: " << encounter->field_scope.get_field<std::string>("name")->get_value() << std::endl;
+    std::cout << "ENCOUNTER: " << encounter->field_scope.get_field<std::string>("name")->get_value() << std::endl;
+
+    // Game start input
+    std::cout << "Press Enter to start the encounter ...";
+    std::cin.clear();
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
     auto enemy_cloners = encounter->getSpawners();
     std::vector<DmsEnemy*> enemies;
@@ -123,6 +132,7 @@ void Interpreter::run_encounter(DmsEncounter *encounter){
     });
 
     // Run damage simulation
+    bool first_log = true;
     while (!enemies.empty() && !players.empty()) {
         for (auto &character : characters){
             // std::cout << "Players alive: " << players.size() << std::endl;
@@ -133,6 +143,11 @@ void Interpreter::run_encounter(DmsEncounter *encounter){
                     // Enemy is attacking
                     int target = get_random_int(0, players.size() - 1);
                     DmsPlayer *defender = players.at(target);
+
+                    if (first_log) {
+                        print_log();
+                        first_log = false;
+                    }
                     attack(character, defender);
 
                     if (defender->field_scope.get_field<float>("hp")->get_value() <= 0){
@@ -143,6 +158,7 @@ void Interpreter::run_encounter(DmsEncounter *encounter){
                     // Player is attacking
                     int target = get_enemy(enemies);
                     DmsEnemy *defender = enemies.at(target);
+                    print_log();
                     attack(character, defender);
 
                     if (defender->field_scope.get_field<float>("hp")->get_value() <= 0){
@@ -153,7 +169,8 @@ void Interpreter::run_encounter(DmsEncounter *encounter){
             }
 
             if (enemies.empty() || players.empty()) {
-                std::cout << "Encounter finished" << std::endl;
+                print_clear();
+                std::cout << "-> Encounter Finished <-" << std::endl << std::endl;
                 break;
             }
         }
@@ -185,20 +202,29 @@ void Interpreter::attack(DmsCharacter *attacker, DmsCharacter *defender) {
 }
 
 int Interpreter::get_enemy(std::vector<DmsEnemy*> enemies) {
-    std::cout << "Enemies: " << std::endl;
+    std::cout << std::endl << "ENEMIES: " << std::endl;
     for (auto it = enemies.begin(); it != enemies.end(); ++it) {
-        std::cout << "[" << std::distance(enemies.begin(), it) + 1 << "] " << (*it)->serialize() << std::endl;
+        std::cout << "[" << std::distance(enemies.begin(), it) + 1 << "]" << (*it)->serialize() << std::endl;
     }
 
     uint32_t result;
-    std::cout << "Choose which enemy to attack: ";
+    std::cout << std::endl << "Choose an enemy to attack: ";
     while (!(std::cin >> result) || result < 1 || result > enemies.size()) {
-        std::cout << "Invalid enemy! New: ";
+        std::cout << "Invalid enemy! Choose again: ";
         std::cin.clear();
         std::cin.ignore();
     }
+    std::cin.clear();
+    std::cin.ignore();
 
     return result - 1;
 }
 
+void Interpreter::print_clear() {
+    system("clear");
+}
 
+void Interpreter::print_log() {
+    print_clear();
+    std::cout << "BATTLE LOG:" << std::endl;
+}

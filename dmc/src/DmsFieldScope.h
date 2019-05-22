@@ -27,7 +27,7 @@ public:
     template<typename T>
     std::vector<DmsField<T>> get_all_fields() const; // Use with eg. get_all_fields<int>()
 
-    std::string serialize();
+    std::string serialize(bool split = false);
 
  private:
     DmsFieldScope* enclosing_scope;

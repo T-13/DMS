@@ -12,6 +12,6 @@ public:
     DmsObject(DmsFieldScope* enclosing_scope);
     virtual ~DmsObject();
 
-    virtual std::string serialize() { return field_scope.serialize(); };
-    virtual bool verify() { return true; };
+    virtual std::string serialize(bool split = false);
+    virtual bool verify();
 };

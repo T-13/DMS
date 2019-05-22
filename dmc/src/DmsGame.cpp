@@ -17,9 +17,10 @@ DmsGame::~DmsGame() {
 }
 
 std::string DmsGame::serialize() {
-    return  "\nCONSTANTS: \n" + constants->serialize() + "\n" +
-            "PLAYERS: \n" + players->serialize() +
-            "ENEMIES: \n" + enemies->serialize() +
-            "ENCOUNTERS: \n" + encounters->serialize() +
-            "SCENARIOS: \n" + scenarios->serialize();
+    return  "\nCONSTANTS:\n" + constants->serialize(true) + "\n" +
+            "PLAYERS:" + players->serialize(false) + "\n" +
+            "\nENEMIES:" + enemies->serialize() + "\n" +
+            "\nENCOUNTERS:" + encounters->serialize() + "\n" +
+            "\nSCENARIOS:" + scenarios->serialize() + "\n" +
+            "\n";
 }

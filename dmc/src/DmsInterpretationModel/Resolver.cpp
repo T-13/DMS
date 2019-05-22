@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <vector>
+#include <limits>
 
 #include "../DmsSerializable.h"
 #include "Interpreter.h"
@@ -47,6 +48,10 @@ void Resolver::resolve() {
     std::cout << std::endl << "Serializing ... " << game->serialize();
     std::cout << "Running ... " << std::endl;
 
+    // Game start input
+    std::cout << "Press Enter to run game ...";
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
     Interpreter interpreter;
     bool exception = false;
     try {
@@ -57,8 +62,9 @@ void Resolver::resolve() {
     }
 
     if (!exception) {
-        std::cout << "Game finished! Congratulations" << std::endl;
+        std::cout << "=>   Game Finished!   <=" << std::endl << "=>  Congratulations!  <=" << std::endl;
     }
+
 
     // TODO - give DmsObject getField, GetFieldValue and GetFieldName that wraps FieldScope and replace long spaghetis with nicer calls to this function
     // Like wtf is this: game->enemies->field_scope.get_field<DmsSerializable*>(. . . ) xD
