@@ -50,6 +50,7 @@ void DmsScenario::addEncounter(DmsEncounter *encounter, int amount) {
     encounters.push_back(new DmsDuplicator<DmsEncounter>(encounter, amount));
 }
 
+// TODO print
 std::string DmsScenario::serialize() {
     std::string result = "\n";
     for (auto &dupe : encounters) {

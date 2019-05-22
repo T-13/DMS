@@ -1,7 +1,6 @@
 #pragma once
 
 #include "DmsObject.h"
-
 #include "DmsObjects/DmsScenario.h"
 
 class DmsGame {
@@ -16,5 +15,5 @@ public:
     DmsGame();
     ~DmsGame();
 
-    std::string serialize();
+    void print(std::ostream &os) const;
 };

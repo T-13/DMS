@@ -247,8 +247,9 @@ int Interpreter::get_enemy(std::vector<DmsEnemy*> enemies) {
     for (auto it = enemies.begin(); it != enemies.end(); ++it) {
         std::cout << rang::fgB::red << "[" << rang::fg::reset
             << rang::style::bold << std::distance(enemies.begin(), it) + 1 << rang::style::reset
-            << rang::fgB::red << "]" << rang::fg::reset
-            << (*it)->serialize() << std::endl;
+            << rang::fgB::red << "]" << rang::fg::reset;
+        (*it)->print(std::cout);
+        std::cout << std::endl;
     }
 
     uint32_t result;
@@ -265,7 +266,11 @@ int Interpreter::get_enemy(std::vector<DmsEnemy*> enemies) {
 }
 
 void Interpreter::print_clear() {
+#ifdef _WIN32
+    system("cls");
+#else
     system("clear");
+#endif
 }
 
 void Interpreter::print_log() {

@@ -51,6 +51,7 @@ void DmsEncounter::addSpawner(DmsEnemy *enemy, int amount) {
     enemies.push_back(new DmsDuplicator<DmsEnemy>(enemy, amount));
 }
 
+// TODO print
 std::string DmsEncounter::serialize() {
     std::string result = "\n";
     auto float_fields = field_scope.get_all_fields<float>();

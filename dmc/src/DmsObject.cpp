@@ -14,10 +14,10 @@ DmsObject::DmsObject(DmsFieldScope* enclosing_scope) {
 DmsObject::~DmsObject() {
 }
 
-std::string DmsObject::serialize(bool split) {
-    return field_scope.serialize(split);
-}
-
 bool DmsObject::verify() {
     return true;
+}
+
+void DmsObject::print(std::ostream &os, bool split) const {
+    field_scope.print(os, split);
 }

@@ -5,6 +5,8 @@
 
 #include "DmsSerializable.h"
 
+#include "lib/rang.hpp"
+
 /**
  *
  *  DmsField is used to store atributes of DmsObjects
@@ -28,7 +30,7 @@ public:
     void set_value(T value_, bool is_resolved_);
     std::string get_name() const;
 
-    std::string serialize(bool split = false);
+    void print(std::ostream &os, bool split = false) const;
 
 protected:
     std::string name;
@@ -63,7 +65,6 @@ template<class T>
 bool DmsField<T>::get_is_resolved() const {
     return is_resolved;
 }
-
 template <class T>
 void DmsField<T>::set_value(T newValue, bool is_resolved_) {
     value = newValue;
@@ -76,28 +77,23 @@ std::string DmsField<T>::get_name() const {
 }
 
 template<class T>
-std::string DmsField<T>::serialize(bool split) {
-    std::string s;
-    if (split) s += "-> ";
-    s += name + ": " + std::to_string(value);
-    if (split) s += "\n";
-    return s;
+void DmsField<T>::print(std::ostream &os, bool split) const {
+    if (split) os << "-> ";
+    os << name << ": " << value;
+    if (split) os << std::endl;
 }
 
 // inline to avoid multiple definitions (function without arguments)
 template<>
-inline std::string DmsField<std::string>::serialize(bool split) {
-    std::string s;
-    if (split) s += "-> ";
-    s += name + ": " + value;
-    if (split) s += "\n";
-    return s;
+inline void DmsField<std::string>::print(std::ostream &os, bool split) const {
+    if (split) os << "-> ";
+    os << name << ": " << value;
+    if (split) os << std::endl;
 }
 
 template<>
-inline std::string DmsField<DmsSerializable*>::serialize(bool split) {
-    std::string s;
-    s += "\n-> " + name + " =>" + value->serialize(split);
-    if (split) s += "\n";
-    return s;
+inline void DmsField<DmsSerializable*>::print(std::ostream &os, bool split) const {
+    os << std::endl << "-> " << name << " =>";
+    value->print(os, split);
+    if (split) os << std::endl;
 }

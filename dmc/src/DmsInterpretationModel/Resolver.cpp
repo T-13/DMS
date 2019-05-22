@@ -51,8 +51,9 @@ void Resolver::resolve() {
         }
     }
 
-    std::cout << "-> " << rang::fgB::green << "[Valid]" << rang::fg::reset << " Encounters" << std::endl;
-    std::cout << std::endl << rang::style::bold << "Serializing ..." << rang::style::reset << game->serialize();
+    std::cout << "-> " << rang::fgB::green << "[Valid]" << rang::fg::reset << " Encounters" << std::endl
+        << std::endl << rang::style::bold << "Serializing ..." << rang::style::reset;
+    game->print(std::cout);
     std::cout << rang::style::bold << "Running ..." << rang::style::reset << std::endl;
 
     Interpreter interpreter;

@@ -9,6 +9,8 @@ class DmsObject;
 
 class DmsFieldScope {
 public:
+    bool split_serialization = false;
+
     DmsFieldScope();
     DmsFieldScope(const DmsFieldScope &original);
     ~DmsFieldScope();
@@ -27,9 +29,9 @@ public:
     template<typename T>
     std::vector<DmsField<T>> get_all_fields() const; // Use with eg. get_all_fields<int>()
 
-    std::string serialize(bool split = false);
+    void print(std::ostream &os, bool split = false) const;
 
- private:
+private:
     DmsFieldScope* enclosing_scope;
 
     std::map<std::string, DmsField<float>> float_fields;

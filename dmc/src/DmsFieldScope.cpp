@@ -78,20 +78,16 @@ std::vector<std::string> DmsFieldScope::get_all_field_names() {
     return result;
 }
 
-std::string DmsFieldScope::serialize(bool split) {
-    std::string s = "";
-
+void DmsFieldScope::print(std::ostream &os, bool split) const {
     for (auto &field : float_fields) {
-        if (!split) s += " ";
-        s += field.second.serialize(split);
+        if (!split) os << " ";
+        field.second.print(os, split);
     }
     for (auto &field : string_fields) {
-        if (!split) s += " ";
-        s += field.second.serialize(split);
+        if (!split) os << " ";
+        field.second.print(os, split);
     }
     for (auto &field : object_fields) {
-        s += field.second.serialize(split);
+        field.second.print(os, false);
     }
-
-    return s;
 }

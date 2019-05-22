@@ -16,11 +16,21 @@ DmsGame::~DmsGame() {
     delete scenarios;
 }
 
-std::string DmsGame::serialize() {
-    return  "\nCONSTANTS:\n" + constants->serialize(true) + "\n" +
-            "PLAYERS:" + players->serialize(false) + "\n" +
-            "\nENEMIES:" + enemies->serialize() + "\n" +
-            "\nENCOUNTERS:" + encounters->serialize() + "\n" +
-            "\nSCENARIOS:" + scenarios->serialize() + "\n" +
-            "\n";
+void DmsGame::print(std::ostream &os) const {
+    os << std::endl << "CONSTANTS:" << std::endl;
+    constants->print(os, true);
+
+    os << std::endl << "PLAYERS:";
+    players->print(os, false);
+
+    os << std::endl << std::endl << "ENEMIES:";
+    enemies->print(os, false);
+
+    os << std::endl << std::endl << "ENCOUNTERS:";
+    encounters->print(os, false);
+
+    os << std::endl << std::endl << "SCENARIOS:";
+    scenarios->print(os, false);
+
+    os << std::endl << std::endl;
 }
