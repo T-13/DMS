@@ -214,17 +214,6 @@ protected:
 
             if (token.type() == Token::String) {
                 std::string value = token.lexem();
-
-                // possible string variable
-                std::string varname = value;
-                varname.erase(0, 1); // erase the first character
-                varname.erase(varname.size() - 1); // erase the last character
-
-                DmsField<std::string> *field = game->constants->field_scope.get_field<std::string>(varname);
-                if (field) {
-                    value = field->get_value();
-                }
-
                 token = scanner.next_token();
                 if (token.type() == Token::Identifier) {
                     current->field_scope.set_field_value(token.lexem(), value, true);
@@ -232,11 +221,27 @@ protected:
                     return Ok;
                 }
             } else {
+                // possible string constant
+                DmsField<std::string> *field = nullptr;
+                if (token.type() == Token::Identifier) {
+                    field = game->constants->field_scope.get_field<std::string>(token.lexem());
+                }
+
                 float new_value;
-                if (!E(new_value)) return Error;
+                if (field) {
+                    //value = field->get_value();
+                    token = scanner.next_token();
+                } else {
+                    if (!E(new_value)) return Error;
+                }
 
                 if (token.type() == Token::Identifier) {
-                    current->field_scope.set_field_value(token.lexem(), new_value, true);
+                    if (field) {
+                        current->field_scope.set_field_value(token.lexem(), field->get_value(), true);
+                    } else {
+                        current->field_scope.set_field_value(token.lexem(), new_value, true);
+                    }
+
                     token = scanner.next_token();
                     return Ok;
                 }
