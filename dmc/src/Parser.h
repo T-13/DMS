@@ -1,7 +1,8 @@
 #pragma once
 
 #include <istream>
-#include <math.h>
+#include <sstream>
+#include <cmath>
 
 #include "Scanner.h"
 #include "DmsGame.h"
@@ -30,6 +31,7 @@ public:
         // Lexical error or premature EOF (syntax error)
         if (!token.eof()) {
             if (token.error()) {
+                error_ss << "lex error: " << token << std::endl;
                 return Error;
             } else {
                 result = Error;
@@ -38,6 +40,7 @@ public:
 
         // Syntax error
         if (error()) {
+            error_ss << "parse error: " << token << " unexpected" << std::endl;
             return Error;
         }
 
@@ -46,6 +49,10 @@ public:
 
     bool error() {
         return result == Error;
+    }
+
+    std::string error_str() {
+        return error_ss.str();
     }
 
     void set_current(DmsObject *object) {
@@ -207,6 +214,17 @@ protected:
 
             if (token.type() == Token::String) {
                 std::string value = token.lexem();
+
+                // possible string variable
+                std::string varname = value;
+                varname.erase(0, 1); // erase the first character
+                varname.erase(varname.size() - 1); // erase the last character
+
+                DmsField<std::string> *field = game->constants->field_scope.get_field<std::string>(varname);
+                if (field) {
+                    value = field->get_value();
+                }
+
                 token = scanner.next_token();
                 if (token.type() == Token::Identifier) {
                     current->field_scope.set_field_value(token.lexem(), value, true);
@@ -451,11 +469,12 @@ protected:
             DmsField<float> *field = game->constants->field_scope.get_field<float>(token.lexem());
             if (field) {
                 out_value = field->get_value();
-                token = scanner.next_token();
-                return Ok;
             } else {
                 return Error;
             }
+
+            token = scanner.next_token();
+            return Ok;
         }
         return Error;
     }
@@ -469,9 +488,13 @@ private:
 
     Scanner scanner;
     Token token;
+
     bool result;
+    std::ostringstream error_ss;
 
     // Evaluator
+    std::map<std::string, std::string> string_variables;
+
     DmsObject *current;
     DmsObject *scope;
 

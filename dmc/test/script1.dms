@@ -1,22 +1,23 @@
 CONSTANTS:
-playerName "asd"
-playerHP 1+2+3
-enemyBaseHp playerHP*(3 + 1)
+playerName "Geralt"
+playerHP 100
+enemyHPFactor playerHP / (1.5 * playerHP)
 
 PLAYERS:
-player1 has playerHP*2 hp has 20 dmg has 0.8 hit_chance has "Nejc" name has 9001 speed
+player1 has playerHP * 5 hp has 50 dmg has 0.8 hit_chance has "playerName" name has 50 speed
 
 ENEMIES:
-enemy1 has (enemyBaseHp+2)%playerHP hp has 50 dmg has 0.9 hit_chance has "Timi" name has 420 speed
-enemy2 has enemyBaseHp*0.01 hp has 1000 dmg has 0.1 hit_chance has "Andraž" name has 69 speed
+enemy1 has (enemyHPFactor + 2) % 96 hp has 25 dmg has 0.7 hit_chance has "Wyvern" name has 90 speed
+enemy2 has 50 * enemyHPFactor hp has 35 dmg has 0.5 hit_chance has "Slyzard" name has 70 speed
+enemy3 has 100 * enemyHPFactor hp has 95 dmg has 0.1 hit_chance has "Bruxa" name has 30 speed
 
 ENCOUNTERS:
-encounter1 has enemy1 * 5 + enemy2 * 2
-encounter2 has enemy2 * 10
+encounter1 has enemy1 * 5 + enemy2 * 5
+encounter2 has enemy3 * 1
 
 SCENARIOS:
 scenario1 has encounter1 + encounter2 + encounter1
 scenario2 has encounter2 * 5
-scenario3 has encounter1 * 3 + encounter2
+scenario3 has encounter1 + encounter2
 
 START scenario3

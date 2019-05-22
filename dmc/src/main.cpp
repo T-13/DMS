@@ -39,13 +39,19 @@ int main(int argc, char *argv[]) {
     std::cout << "Parsing ..." << std::endl;
     Parser parser(&in_f);
     bool res = parser.parse();
-    std::cout << "-> " << (res ? "Successful!" : "Failed!") << std::endl;
-
-    Resolver resolver = Resolver(parser.game);
-    resolver.resolve();
+    if (res) {
+        std::cout << "-> Successful!" << std::endl;
+    } else {
+        std::cout << "-> Failed!" << std::endl << "-> " << parser.error_str();
+    }
 
     // Cleanup
     in_f.close();
+
+    if (res) {
+        Resolver resolver = Resolver(parser.game);
+        resolver.resolve();
+    }
 
     return 0;
 }
