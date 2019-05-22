@@ -2,31 +2,38 @@
 
 #include <iostream>
 #include <vector>
-#include <limits>
 
 #include "../DmsSerializable.h"
 #include "Interpreter.h"
+
+#include "../rang.hpp"
 
 Resolver::Resolver(DmsGame *game_)
         : game(game_) {
 }
 
 void Resolver::resolve() {
-    std::cout << std::endl << "Resolving ..." << std::endl;
-
     for (auto &player : game->players->field_scope.get_all_fields<DmsSerializable*>()) {
         if (!static_cast<DmsEnemy*>(player.get_value())->verify()) {
-            std::cout << "-> [Invalid] Player:" << player.get_name() << std::endl;
+            std::cout << "-> "
+                << rang::fgB::red << "[Invalid]" << rang::fg::reset
+                << " Player:" << player.get_name() << std::endl;
         } else {
-            std::cout << "-> [Valid] Player: " << player.get_name() << std::endl;
+            std::cout << "-> "
+                << rang::fgB::green << "[Valid]" << rang::fg::reset
+                << " Player: " << player.get_name() << std::endl;
         }
     }
 
     for (auto &enemy : game->enemies->field_scope.get_all_fields<DmsSerializable*>()) {
         if (!static_cast<DmsEnemy*>(enemy.get_value())->verify()) {
-            std::cout << "-> [Invalid] Enemy" << enemy.get_name() << std::endl;
+            std::cout << "-> "
+                << rang::fgB::red << "[Invalid]" << rang::fg::reset
+                << " Enemy" << enemy.get_name() << std::endl;
         } else {
-            std::cout << "-> [Valid] Enemy: " << enemy.get_name() << std::endl;
+            std::cout << "-> "
+                << rang::fgB::green << "[Valid]" << rang::fg::reset
+                << " Enemy: " << enemy.get_name() << std::endl;
         }
     }
 
@@ -44,13 +51,9 @@ void Resolver::resolve() {
         }
     }
 
-    std::cout << "-> [Valid] Encounters" << std::endl;
-    std::cout << std::endl << "Serializing ... " << game->serialize();
-    std::cout << "Running ... " << std::endl;
-
-    // Game start input
-    std::cout << "Press Enter to run game ...";
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    std::cout << "-> " << rang::fgB::green << "[Valid]" << rang::fg::reset << " Encounters" << std::endl;
+    std::cout << std::endl << rang::style::bold << "Serializing ..." << rang::style::reset << game->serialize();
+    std::cout << rang::style::bold << "Running ..." << rang::style::reset << std::endl;
 
     Interpreter interpreter;
     bool exception = false;
@@ -62,7 +65,14 @@ void Resolver::resolve() {
     }
 
     if (!exception) {
-        std::cout << "=>   Game Finished!   <=" << std::endl << "=>  Congratulations!  <=" << std::endl;
+        std::cout << rang::style::bold
+            << rang::fg::green << "=>" << rang::fg::reset
+            << "   Game Finished!   "
+            << rang::fg::green << "<=" << rang::fg::reset << std::endl
+            << rang::fg::green << "=>" << rang::fg::reset
+            << "  Congratulations!  "
+            << rang::fg::green << "<=" << rang::fg::reset
+            << rang::style::reset << std::endl;
     }
 
 

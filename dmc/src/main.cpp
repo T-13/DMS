@@ -4,6 +4,8 @@
 #include "Parser.h"
 #include "DmsInterpretationModel/Resolver.h"
 
+#include "rang.hpp"
+
 void usage() {
     std::cout << "./dmc <input>" << std::endl << std::endl;
     std::cout << "Run DMS file." << std::endl;
@@ -36,19 +38,20 @@ int main(int argc, char *argv[]) {
     }
 
     // Syntax analysis / Parse
-    std::cout << "Parsing ..." << std::endl;
+    std::cout << rang::style::bold << "Parsing ..." << rang::style::reset << std::endl;
     Parser parser(&in_f);
     bool res = parser.parse();
     if (res) {
-        std::cout << "-> Successful!" << std::endl;
+        std::cout << "-> " << rang::fgB::green << "Successful!" << rang::fg::reset << std::endl;
     } else {
-        std::cout << "-> Failed!" << std::endl << "-> " << parser.error_str();
+        std::cout << "-> " << rang::fgB::red << "Error! " << rang::fg::reset << parser.error_str();
     }
 
     // Cleanup
     in_f.close();
 
     if (res) {
+        std::cout << std::endl << rang::style::bold << "Resolving ..." << rang::style::reset << std::endl;
         Resolver resolver = Resolver(parser.game);
         resolver.resolve();
     }

@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <random>
 #include <limits>
+#include <typeinfo>
 
 #include "../DmsGame.h"
 #include "../DmsObjects/DmsDuplicator.h"
@@ -14,6 +15,7 @@
 #include "../DmsObjects/DmsPlayer.h"
 #include "../DmsObjects/DmsScenario.h"
 
+#include "../rang.hpp"
 
 class RuntimeException: public std::exception {
 public:
@@ -86,7 +88,15 @@ private:
 };
 
 void Interpreter::run_scenario(DmsScenario *scenario){
-    std::cout << std::endl << "SCENARIO: " << scenario->field_scope.get_field<std::string>("name")->get_value() << std::endl;
+    std::cout << "SCENARIO: " << rang::style::bold
+        << scenario->field_scope.get_field<std::string>("name")->get_value()
+        << rang::style::reset << std::endl;
+
+    // Scenario start input
+    std::cout << "Press Enter to begin ...";
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    std::cout << std::endl;
+
     auto encounter_cloners = scenario->getEncounters();
     for (auto &encounter_cloner : encounter_cloners) {
         for (int j = 0; j < encounter_cloner->get_amount(); ++j) {
@@ -96,11 +106,13 @@ void Interpreter::run_scenario(DmsScenario *scenario){
     }
 }
 
-void Interpreter::run_encounter(DmsEncounter *encounter){
-    std::cout << "ENCOUNTER: " << encounter->field_scope.get_field<std::string>("name")->get_value() << std::endl;
+void Interpreter::run_encounter(DmsEncounter *encounter) {
+    std::cout << "ENCOUNTER: " << rang::style::bold
+        << encounter->field_scope.get_field<std::string>("name")->get_value()
+        << rang::style::reset << std::endl;
 
-    // Game start input
-    std::cout << "Press Enter to start the encounter ...";
+    // Encounter start input
+    std::cout << "Press Enter to fight ...";
     std::cin.clear();
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
@@ -152,7 +164,9 @@ void Interpreter::run_encounter(DmsEncounter *encounter){
 
                     if (defender->field_scope.get_field<float>("hp")->get_value() <= 0){
                         players.erase(players.begin() + target);
-                        std::cout << defender->field_scope.get_field<std::string>("name")->get_value() << " has died!" << std::endl;
+                        std::cout << rang::style::italic
+                            << rang::fgB::green << defender->field_scope.get_field<std::string>("name")->get_value() << rang::fg::reset
+                            << " has died!" << rang::style::reset << std::endl;
                     }
                 } else {
                     // Player is attacking
@@ -162,21 +176,23 @@ void Interpreter::run_encounter(DmsEncounter *encounter){
                     attack(character, defender);
 
                     if (defender->field_scope.get_field<float>("hp")->get_value() <= 0){
-                        std::cout << defender->field_scope.get_field<std::string>("name")->get_value() << " has died!" << std::endl;
+                        std::cout << rang::style::italic
+                            << rang::fgB::red << defender->field_scope.get_field<std::string>("name")->get_value() << rang::fg::reset
+                            << " has died!" << rang::style::reset << std::endl;
                         enemies.erase(enemies.begin() + target);
                     }
                 }
             }
 
             if (enemies.empty() || players.empty()) {
-                print_clear();
-                std::cout << "-> Encounter Finished <-" << std::endl << std::endl;
+                std::cout << std::endl << rang::style::bold
+                    << rang::fg::yellow << "->" << rang::fg::reset
+                    << " Encounter Finished "
+                    << rang::fg::yellow << "<-" << rang::fg::reset
+                    << rang::style::reset << std::endl << std::endl;
                 break;
             }
         }
-
-        // TODO - Give good cout for game states - general cout improvements - more information - etc.
-        // TODO improve couts overall !!!
     }
     if (players.empty()) {
         throw RuntimeException("DIE!!!!", RuntimeException::State::GameOver);
@@ -184,33 +200,61 @@ void Interpreter::run_encounter(DmsEncounter *encounter){
 }
 
 void Interpreter::attack(DmsCharacter *attacker, DmsCharacter *defender) {
+    // Player always green
+    rang::fgB attacker_fg;
+    rang::fgB defender_fg;
+    if (typeid(*attacker) == typeid(DmsPlayer)) {
+        attacker_fg = rang::fgB::green;
+        defender_fg = rang::fgB::red;
+    } else {
+        attacker_fg = rang::fgB::red;
+        defender_fg = rang::fgB::green;
+    }
+
     float hit_roll = get_random_float();
     // Attacker hit defender
     if (hit_roll < attacker->field_scope.get_field<float>("hit_chance")->get_value()) {
         float dmg = attacker->field_scope.get_field<float>("dmg")->get_value();
         auto hp = defender->field_scope.get_field<float>("hp");
 
-        std::cout << attacker->field_scope.get_field<std::string>("name")->get_value() << " has hit " << defender->field_scope.get_field<std::string>("name")->get_value();
-        std::cout << " for " << dmg << " damage" << std::endl;
-        std::cout << defender->field_scope.get_field<std::string>("name")->get_value() << "'s hp went from " << hp->get_value() << " to ";
+        // Battle log
+        std::cout << attacker_fg << attacker->field_scope.get_field<std::string>("name")->get_value() << rang::fg::reset
+            << rang::style::dim << " has " << rang::style::reset << rang::fgB::red << "hit " << rang::fg::reset
+            << defender_fg << defender->field_scope.get_field<std::string>("name")->get_value() << rang::fg::reset
+            << rang::style::dim << " for " << rang::style::reset
+            << rang::style::bold << rang::fgB::red << dmg << rang::style::reset << rang::fg::reset
+            << rang::style::dim << " damage" << rang::style::reset << std::endl
+            << rang::fgB::green << defender->field_scope.get_field<std::string>("name")->get_value() << rang::fg::reset
+            << rang::style::dim << "'s " << rang::style::reset
+            << rang::fgB::yellow << "hp" << rang::fg::reset
+            << rang::style::dim << " went from " << rang::style::reset
+            << rang::style::bold << rang::fgB::green << hp->get_value() << rang::style::reset << rang::fg::reset
+            << " to ";
+
         // Set new hp value
         hp->set_value(hp->get_value() - dmg, true);
-        std::cout << hp->get_value() << std:: endl;
+        std::cout << rang::style::bold << rang::fgB::yellow << hp->get_value() << rang::style::reset << rang::fg::reset<< std::endl;
     } else {
-        std::cout << attacker->field_scope.get_field<std::string>("name")->get_value() << " has missed " << defender->field_scope.get_field<std::string>("name")->get_value() << std::endl;
+        std::cout << attacker_fg << attacker->field_scope.get_field<std::string>("name")->get_value() << rang::fg::reset
+            << rang::style::dim << " has " << rang::style::reset
+            << rang::fgB::magenta << "missed " << rang::fg::reset
+            << defender_fg << defender->field_scope.get_field<std::string>("name")->get_value() << rang::style::reset << std::endl;
     }
 }
 
 int Interpreter::get_enemy(std::vector<DmsEnemy*> enemies) {
-    std::cout << std::endl << "ENEMIES: " << std::endl;
+    std::cout << std::endl << rang::style::bold << "ENEMIES:" << rang::style::reset << std::endl;
     for (auto it = enemies.begin(); it != enemies.end(); ++it) {
-        std::cout << "[" << std::distance(enemies.begin(), it) + 1 << "]" << (*it)->serialize() << std::endl;
+        std::cout << rang::fgB::red << "[" << rang::fg::reset
+            << rang::style::bold << std::distance(enemies.begin(), it) + 1 << rang::style::reset
+            << rang::fgB::red << "]" << rang::fg::reset
+            << (*it)->serialize() << std::endl;
     }
 
     uint32_t result;
     std::cout << std::endl << "Choose an enemy to attack: ";
     while (!(std::cin >> result) || result < 1 || result > enemies.size()) {
-        std::cout << "Invalid enemy! Choose again: ";
+        std::cout << rang::fgB::red << "Invalid enemy! " << rang::fg::reset << "Choose again: ";
         std::cin.clear();
         std::cin.ignore();
     }
@@ -226,5 +270,5 @@ void Interpreter::print_clear() {
 
 void Interpreter::print_log() {
     print_clear();
-    std::cout << "BATTLE LOG:" << std::endl;
+    std::cout << rang::style::bold << "BATTLE LOG:" << rang::style::reset << std::endl;
 }
