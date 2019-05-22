@@ -4,7 +4,7 @@ playerHP 100
 enemyHPFactor playerHP / (1.5 * playerHP)
 
 PLAYERS:
-player1 has playerHP * 100 hp has 50 dmg has 0.8 hit_chance has playerName name has 50 speed
+player1 has playerHP * 10 hp has 50 dmg has 0.8 hit_chance has playerName name has 50 speed
 
 ENEMIES:
 enemy1 has (enemyHPFactor + 2) % 96 hp has 25 dmg has 0.7 hit_chance has "Wyvern" name has 90 speed
@@ -22,4 +22,4 @@ scenario2 has encounter2 * 5
 scenario3 has encounter1 + encounter2
 scenarioT has encounterT * 2
 
-START scenarioT
+START scenario3

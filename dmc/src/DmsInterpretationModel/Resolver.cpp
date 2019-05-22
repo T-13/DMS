@@ -18,6 +18,7 @@ void Resolver::resolve() {
             std::cout << "-> "
                 << rang::fgB::red << "[Invalid]" << rang::fg::reset
                 << " Player:" << player.get_name() << std::endl;
+            throw ResolveException(player.get_name(), ResolveException::VariableFailedVerification);
         } else {
             std::cout << "-> "
                 << rang::fgB::green << "[Valid]" << rang::fg::reset
@@ -30,6 +31,7 @@ void Resolver::resolve() {
             std::cout << "-> "
                 << rang::fgB::red << "[Invalid]" << rang::fg::reset
                 << " Enemy" << enemy.get_name() << std::endl;
+            throw ResolveException(enemy.get_name(), ResolveException::VariableFailedVerification);
         } else {
             std::cout << "-> "
                 << rang::fgB::green << "[Valid]" << rang::fg::reset

@@ -79,7 +79,8 @@ std::string DmsField<T>::get_name() const {
 template<class T>
 void DmsField<T>::print(std::ostream &os, bool split) const {
     if (split) os << "-> ";
-    os << name << ": " << value;
+    os << rang::fgB::yellow << name << rang::fg::reset << ": "
+        << rang::fgB::blue << value << rang::fg::reset;
     if (split) os << std::endl;
 }
 
@@ -87,13 +88,15 @@ void DmsField<T>::print(std::ostream &os, bool split) const {
 template<>
 inline void DmsField<std::string>::print(std::ostream &os, bool split) const {
     if (split) os << "-> ";
-    os << name << ": " << value;
+    os << rang::fgB::yellow << name << rang::fg::reset << ": "
+        << rang::fgB::blue << value << rang::fg::reset;
     if (split) os << std::endl;
 }
 
 template<>
 inline void DmsField<DmsSerializable*>::print(std::ostream &os, bool split) const {
-    os << std::endl << "-> " << name << " =>";
+    os << std::endl << "-> "
+        << rang::fgB::yellow << name << rang::fg::reset << " =>";
     value->print(os, split);
     if (split) os << std::endl;
 }
