@@ -493,8 +493,6 @@ private:
     std::ostringstream error_ss;
 
     // Evaluator
-    std::map<std::string, std::string> string_variables;
-
     DmsObject *current;
     DmsObject *scope;
 
