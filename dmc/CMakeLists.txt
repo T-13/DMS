@@ -14,4 +14,6 @@ file(GLOB_RECURSE DMC_SRC
     "src/*.cpp"
 )
 
+include_directories("${CMAKE_SOURCE_DIR}")
+
 add_executable(dmc ${DMC_SRC})

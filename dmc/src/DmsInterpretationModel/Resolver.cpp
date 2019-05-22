@@ -6,7 +6,7 @@
 #include "../DmsSerializable.h"
 #include "Interpreter.h"
 
-#include "../rang.hpp"
+#include "lib/rang.hpp"
 
 Resolver::Resolver(DmsGame *game_)
         : game(game_) {

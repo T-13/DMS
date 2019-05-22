@@ -15,7 +15,7 @@
 #include "../DmsObjects/DmsPlayer.h"
 #include "../DmsObjects/DmsScenario.h"
 
-#include "../rang.hpp"
+#include "lib/rang.hpp"
 
 class RuntimeException: public std::exception {
 public:

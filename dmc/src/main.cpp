@@ -4,7 +4,7 @@
 #include "Parser.h"
 #include "DmsInterpretationModel/Resolver.h"
 
-#include "rang.hpp"
+#include "lib/rang.hpp"
 
 void usage() {
     std::cout << "./dmc <input>" << std::endl << std::endl;
