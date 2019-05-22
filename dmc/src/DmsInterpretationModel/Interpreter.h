@@ -16,6 +16,7 @@
 #include "../DmsObjects/DmsScenario.h"
 
 #include "lib/rang.hpp"
+#undef max
 
 class RuntimeException: public std::exception {
 public:

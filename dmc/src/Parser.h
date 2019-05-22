@@ -227,7 +227,7 @@ protected:
                     field = game->constants->field_scope.get_field<std::string>(token.lexem());
                 }
 
-                float new_value;
+                float new_value = 0.0f;
                 if (field) {
                     //value = field->get_value();
                     token = scanner.next_token();
@@ -277,10 +277,10 @@ protected:
 
             scope = current;
             current = nullptr;
-            bool isEncounter = false;
+            bool is_encounter = false;
             if (scope == game->encounters) {
                 set_current(new DmsEncounter());
-                isEncounter = true;
+                is_encounter = true;
             } else if (scope == game->scenarios) {
                 set_current(new DmsScenario());
             } else {
@@ -294,7 +294,7 @@ protected:
             if (token.lexem() == "has") {
                 token = scanner.next_token();
 
-                if (!THING(isEncounter)) return Error;
+                if (!THING(is_encounter)) return Error;
 
                 scope->field_scope.set_field_value(lexem, current, true);
                 current = scope;
@@ -309,16 +309,16 @@ protected:
         return Error;
     }
 
-    bool THING(bool isEncounter) {
+    bool THING(bool is_encounter) {
         if (token.type() == Token::Identifier) {
             std::string occurrence_name = token.lexem();
 
             token = scanner.next_token();
-            if (!OCCURRENCES(occurrence_name, isEncounter)) return Error;
+            if (!OCCURRENCES(occurrence_name, is_encounter)) return Error;
 
             if (token.lexem() == "+") {
                 token = scanner.next_token();
-                return THING(isEncounter);
+                return THING(is_encounter);
             } else {
                 return Ok;
             }
@@ -327,12 +327,12 @@ protected:
         return Error;
     }
 
-    bool OCCURRENCES(std::string occurrence_name, bool isEncounter) {
+    bool OCCURRENCES(std::string occurrence_name, bool is_encounter) {
         if (token.lexem() == "*") {
 
             token = scanner.next_token();
             if (token.type() == Token::Float) {
-                if (isEncounter) {
+                if (is_encounter) {
                     // Encounter
                     float temp = 0;
                     DmsField<float> *previous = current->field_scope.get_field<float>(occurrence_name);
@@ -348,7 +348,7 @@ protected:
                     }
                     DmsEncounter *encounter = static_cast<DmsEncounter*>(field->get_value());
 
-                    static_cast<DmsScenario*>(current)->addEncounter(encounter, std::stof(token.lexem()));
+                    static_cast<DmsScenario*>(current)->add_encounter(encounter, std::stoi(token.lexem()));
                 }
 
 
@@ -359,7 +359,7 @@ protected:
             }
         }
 
-        if (isEncounter) {
+        if (is_encounter) {
             // Encounter
             current->field_scope.set_field_value(occurrence_name, 1, true);
         } else {
@@ -370,7 +370,7 @@ protected:
             }
             DmsEncounter *encounter = static_cast<DmsEncounter*>(field->get_value());
 
-            static_cast<DmsScenario*>(current)->addEncounter(encounter, 1);
+            static_cast<DmsScenario*>(current)->add_encounter(encounter, 1);
         }
 
         return Ok;
@@ -405,8 +405,8 @@ protected:
             std::string sign = token.lexem();
             token = scanner.next_token();
 
-            float new_in_value;
-            float new_out_value;
+            float new_in_value = 0.0f;
+            float new_out_value = 0.0f;
             bool ret = T(new_in_value);
             ret = ret && EE(new_in_value, new_out_value);
             if (sign == "-") {
@@ -432,8 +432,8 @@ protected:
             std::string sign = token.lexem();
             token = scanner.next_token();
 
-            float new_in_value;
-            float new_out_value;
+            float new_in_value = 0.0f;
+            float new_out_value = 0.0f;
             bool ret = F(new_in_value);
             ret = ret && TT(new_in_value, new_out_value);
 
@@ -442,9 +442,9 @@ protected:
             } else if (sign == "/") {
                 out_value = in_value / new_out_value;
             } else if (sign == "^") {
-                out_value = pow(in_value, new_out_value);
+                out_value = std::pow(in_value, new_out_value);
             } else if (sign == "%") {
-                out_value = int(in_value) % int(new_out_value);
+                out_value = std::fmod(in_value, new_out_value);;
             }
 
             return ret;

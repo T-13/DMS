@@ -16,7 +16,7 @@ public:
     ~DmsScenario();
 
     bool verify();
-    void addEncounter(DmsEncounter *encounter, int amount);
+    void add_encounter(DmsEncounter *encounter, int amount);
     std::vector<DmsDuplicator<DmsEncounter>*> getEncounters() { return encounters; }
     std::string serialize();
 

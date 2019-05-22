@@ -49,7 +49,7 @@ void Resolver::resolve() {
             if (enemy == nullptr) {
                 throw ResolveException(enemy_field.get_name(), ResolveException::VariableUndefined);
             }
-            encounter->addSpawner(static_cast<DmsEnemy*>(enemy->get_value()), enemy_field.get_value());
+            encounter->add_spawner(static_cast<DmsEnemy*>(enemy->get_value()), static_cast<int>(enemy_field.get_value()));
         }
     }
 

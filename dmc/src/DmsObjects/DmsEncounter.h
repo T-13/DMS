@@ -13,7 +13,7 @@ public:
     ~DmsEncounter();
 
     bool verify();
-    void addSpawner(DmsEnemy *enemy, int amount);
+    void add_spawner(DmsEnemy *enemy, int amount);
     std::vector<DmsDuplicator<DmsEnemy>*> getSpawners() { return enemies; }
     std::string serialize();
 

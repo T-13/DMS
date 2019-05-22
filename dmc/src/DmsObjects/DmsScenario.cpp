@@ -46,7 +46,7 @@ bool DmsScenario::verify() {
     return true && field_scope.get_field<std::string>("name") != nullptr;
 }
 
-void DmsScenario::addEncounter(DmsEncounter *encounter, int amount) {
+void DmsScenario::add_encounter(DmsEncounter *encounter, int amount) {
     encounters.push_back(new DmsDuplicator<DmsEncounter>(encounter, amount));
 }
 
