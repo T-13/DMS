@@ -59,15 +59,20 @@ void Resolver::resolve() {
     std::cout << rang::style::bold << "Running ..." << rang::style::reset << std::endl;
 
     Interpreter interpreter;
-    bool exception = false;
+    bool success = true;
     try {
         interpreter.run(game);
     } catch (const std::exception &e) {
-        std::cerr << e.what() << std::endl;
-        exception = true;
+        std::string what = e.what();
+        if (what == "GameOver") {
+            success = false;
+        } else {
+            std::cout << e.what() << std::endl;
+            return;
+        }
     }
 
-    if (!exception) {
+    if (success) {
         std::cout << rang::style::bold
             << rang::fg::green << "=>" << rang::fg::reset
             << "   Game Finished!   "
@@ -75,6 +80,15 @@ void Resolver::resolve() {
             << rang::fg::green << "=>" << rang::fg::reset
             << "  Congratulations!  "
             << rang::fg::green << "<=" << rang::fg::reset
+            << rang::style::reset << std::endl;
+    } else {
+        std::cout << rang::style::bold
+            << rang::fg::red << "=>" << rang::fg::reset
+            << "     Game Over!     "
+            << rang::fg::red << "<=" << rang::fg::reset << std::endl
+            << rang::fg::red << "=>" << rang::fg::reset
+            << "     Try Again!     "
+            << rang::fg::red << "<=" << rang::fg::reset
             << rang::style::reset << std::endl;
     }
 

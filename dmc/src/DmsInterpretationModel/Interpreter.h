@@ -21,14 +21,14 @@ class RuntimeException: public std::exception {
 public:
     enum State {
         GameOver,
-        UnknownError,
+        UnknownError
     };
 
     RuntimeException(std::string msg, int type) {
         if (type == UnknownError) {
             m_msg = "UnknownError{\n" + msg + "\n}";
         } else if (type == GameOver) {
-            m_msg = "Game Over! All players are dead!";
+            m_msg = "GameOver";
         } else {
             m_msg = "Error{\n" + msg + "\n}";
         }
